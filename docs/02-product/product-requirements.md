@@ -1,4 +1,4 @@
-# Product Requirements Document — Concept v0.1
+# Product Requirements Document — Concept v0.2
 
 ## Product
 BetweenUs
@@ -6,154 +6,186 @@ BetweenUs
 ## Stage
 Discovery / behavioral validation
 
-## Objective
+## Product definition
+BetweenUs is a private digital home for exactly two consenting adults in a romantic relationship. It combines shared memory, presence and expression, intimacy and desire, shared decisions/discovery, and eventually shared living.
 
-Validate whether a paired couple will use a low-friction shared space to preserve casual “we should” ideas and later rely on that space to make real decisions.
+The initial validation wedge remains intentionally narrow, but product architecture must not treat intimacy as an unrelated future module.
+
+## Objective
+Validate whether a paired couple will use a low-friction shared space to preserve meaningful context, express themselves to each other, and later rely on that context for real shared moments and decisions.
 
 ## Target user
+Two consenting adults in an established romantic relationship who already exchange digital content, preferences and ideas frequently and make recurring joint decisions.
 
-Initial target: two consenting adults in an established romantic relationship who already share digital content frequently and make recurring joint decisions about entertainment, food, activities and travel.
-
-This target is deliberately narrower than “everyone in a relationship.”
-
-## Primary problem
-
-High-value shared ideas are lost inside tools optimized for chronological communication and content consumption. Existing organization methods require too much maintenance, while generic recommendation systems lack couple-specific context.
+## Primary problems
+1. Meaningful shared ideas disappear in chronological communication tools.
+2. Generic recommendation systems lack couple-specific context.
+3. Many relationship signals—especially desire, fantasies, preferences and awkward-to-initiate questions—can be difficult to express naturally even when both partners want openness.
+4. Existing tools tend to separate utility, affection and intimacy rather than treating them as dimensions of one shared life.
 
 ## Product hypothesis
+If BetweenUs makes capture and expression extremely lightweight, preserves intentionally shared context, and resurfaces it when useful, the couple will begin treating it as a durable shared environment rather than another app they must maintain.
 
-If BetweenUs lets either partner capture something in seconds, preserves the shared context, and later resurfaces it when actionable, then the couple will begin treating the product as their durable shared memory and first stop for certain joint decisions.
-
-## Primary success criterion
-
-During a 30-day pilot, both partners repeatedly capture content without prompting and use previously captured content in at least one real joint decision.
-
-The strongest qualitative signal is spontaneous use of language equivalent to **“put that in our app.”**
+## Product pillars
+1. **Shared Memory** — preserve things that matter and make them useful later.
+2. **Presence & Expression** — create lightweight co-presence without rebuilding messaging.
+3. **Intimacy & Desire** — help consenting adult partners express and understand sexual/romantic preferences, curiosity and desire without scoring or pressure.
+4. **Shared Decisions & Discovery** — turn shared context into small actionable choices.
+5. **Shared Living** — later support practical coordination, goals and money-as-enabler.
 
 ## Core entities
-
 ### Couple Space
-A paired environment containing two member identities and all shared content.
+A paired environment containing exactly two member identities and intentionally shared content.
 
 ### Item
-A durable object captured or created in the space.
+A durable shared object: place, media, recipe, product, activity, note, image, link, intimate idea/content, etc.
 
-Possible types include place, movie/show, video, song, recipe/food, product, activity, game, book, trip idea, note, image, link and generic item.
+### Question Card
+A structured prompt placed into the shared space by a partner or suggested by the system. It supports attributable responses without creating a chat thread.
 
-### Source
-Where an item originated: URL, share sheet, manual entry, image/screenshot, partner contribution, or later discovery engine.
+### Response
+A participant state on a Question Card: answered, passed, not-now, or unanswered. Submitted answers are shared.
 
 ### Signal
-A lightweight expression by either partner: interested, not for me, love, maybe, rating, vote, etc. Exact vocabulary is a UX decision.
+A lightweight attributable expression such as interested, maybe, love, not-for-me, rating or vote.
 
 ### Context
-Metadata that makes an item actionable: category, location, distance, price/budget, duration, availability, mood, source evidence, timestamps.
+Metadata that makes an object actionable: category, time, location, distance, price/budget, mood, source and timestamps.
 
 ### Experience
-An item that moved from possibility into something the couple actually did/consumed.
+A possibility that became something the couple actually did or consumed.
 
 ### Trace
-A lightweight sign of partner presence or expression in the shared home.
+A lightweight sign of partner presence/expression in the shared home.
 
-## Functional requirements — V1 candidate
+## Functional requirements — foundational
 
 ### FR1 Pairing
-- A user creates a couple space.
-- The second user joins via an intentional invitation.
-- The product clearly communicates that content added to the space is shared.
-- Both members have equal membership status.
+- One user creates a couple space and intentionally invites the second.
+- Both are equal members.
+- Onboarding clearly states that content intentionally submitted to the couple space is shared.
+- Sensitive capabilities can require additional feature-level controls.
 
 ### FR2 Fast capture
-- Accept a URL or manual item.
-- Mobile share-sheet ingestion is a priority requirement for a real pilot.
-- Capture succeeds even if metadata extraction fails.
+- URL, manual item and mobile share-sheet ingestion.
+- Save succeeds even when enrichment fails.
 - Required fields are minimized.
-- The system may enrich category/title/preview automatically but must distinguish uncertain extraction.
 
 ### FR3 Shared collection
-- Both partners see the same items.
-- Items are searchable and filterable.
+- Both partners see the same intentionally shared items.
 - Organization is primarily automatic.
-- Source attribution is preserved.
+- Source/contributor attribution is preserved.
 
 ### FR4 Partner signals
-- Each partner can react independently.
-- Both signals are visible in the shared space.
-- Signals feed ranking/recommendations.
-- No relationship score is derived from agreement/disagreement.
+- Each partner reacts independently.
+- Both signals remain visible.
+- Disagreement is valid data, not a relationship failure.
+- No compatibility/relationship score is derived.
 
-### FR5 Contextual resurfacing
-- Surface older items based on category and simple context.
-- Initial contexts may be user-selected (“watch something”, “eat/go out”, “do something”).
-- Avoid excessive notifications.
+### FR5 Shared Question Cards
+- Either partner can create a question and place it into the shared space.
+- The system may offer optional prompt suggestions.
+- Questions may be everyday, playful, romantic or sexual.
+- A partner can answer, pass, choose Not now, or leave the card unanswered.
+- Submitted answers are visible to both partners.
+- The UI communicates the shared nature of an answer before submission.
+- No penalty, guilt mechanic, streak loss or repeated pressure follows non-participation.
+- The interaction must feel like an object in the shared room, not a conventional message thread.
 
-### FR6 Decision mode
-- User chooses an intent and optional constraints.
-- System returns a small set of candidates, preferably 3–5.
-- Candidates prioritize shared saved history before generic discovery.
-- Explain why each candidate appears.
+Detailed spec: `docs/03-experience/shared-question-cards.md`.
+
+### FR6 Intimacy & Desire
+BetweenUs must support intimacy as a first-class product domain for consenting adult couples rather than burying it under a generic future-feature label.
+
+The system should be capable of representing intentionally shared:
+- sexual/romantic likes and dislikes;
+- kinks, fetishes, fantasies and curiosities;
+- boundaries and changing preferences;
+- current desire/mood signals;
+- intimate ideas/content;
+- answers to intimate Question Cards;
+- affectionate, flirtatious and playful gestures.
+
+Requirements:
+- intimate context remains attributable where relevant;
+- preferences may evolve;
+- historical preference is never treated as current consent;
+- Pass, Not now and non-response are valid states;
+- no sexual-frequency, libido, performance or compatibility scoring;
+- notifications/previews support discretion;
+- intimate data receives elevated security/privacy treatment.
+
+### FR7 Contextual resurfacing
+Surface older shared context based on intent and simple context without excessive notifications.
+
+### FR8 Decision mode
+- User chooses intent and optional constraints.
+- System returns a small set, preferably 3–5.
+- Shared history is prioritized before generic discovery.
+- Explain why candidates appear.
 - Both partners can react/vote.
 
-### FR7 Completion
-- Mark an item as done/watched/visited/tried.
-- Allow each partner to leave a lightweight post-experience rating/reaction.
-- Preserve the item as shared history rather than deleting it.
+### FR9 Completion / memory
+- Mark ordinary items as done/watched/visited/tried.
+- Collect lightweight post-experience reactions where useful.
+- Do not automatically turn intimate interactions into a sexual-history/performance ledger.
 
-### FR8 Return experience
-- Returning after inactivity should summarize meaningful changes without an inbox metaphor or guilt mechanics.
+### FR10 Return experience
+Returning after inactivity should reveal a finite set of meaningful traces, not an inbox or guilt state.
 
-## Post-V1 candidates
+## Validation sequencing
+The first build does not need to implement the entire product vision simultaneously. However, architecture and UX language should recognize the five pillars from the start.
 
+The initial pilot should validate two complementary behaviors:
+1. **Capture loop:** capture → resurface → decide.
+2. **Expression loop:** prompt/gesture → voluntary response → increased useful shared context.
+
+This allows Shared Question Cards—including carefully scoped intimacy prompts—to be prototyped without building a comprehensive sexual feature suite.
+
+## Post-initial-validation candidates
 - proactive contextual recommendations;
 - external discovery;
-- real-time co-presence;
-- playful gestures/pokes/kisses/taps;
-- “leave something for you” objects;
+- richer real-time co-presence;
+- customizable gestures;
+- richer intimacy/desire exploration;
 - shared lists/groceries;
-- shared goals and purpose funds;
-- location-aware suggestions;
-- consensual live location/presence;
-- richer movie/media integration;
-- recipes and meal decisions;
-- product/gift recall;
-- intimate shared-space features;
+- goals/purpose funds;
+- location-aware suggestions and consensual live presence;
+- richer media/recipe/product integrations;
 - Wayfare integration;
 - calendar/free-time context;
 - richer memory timeline.
 
 ## Non-functional requirements
+### Privacy & security
+Private by default. Relationship, intimate and location data require a higher security posture than ordinary bookmarking data.
 
-### Privacy
-Private by default. Shared content must not become publicly discoverable.
-
-### Security
-Sensitive relationship data, location and intimate content require security design beyond ordinary low-risk bookmarking applications.
+### Discretion
+Sensitive content must not unexpectedly appear in lock-screen notifications, widgets or previews.
 
 ### Responsiveness
-Capture and reaction flows should feel immediate on mobile.
+Capture, reaction, gestures and Question Card responses should feel immediate on mobile.
 
-### Portability
-Users should eventually be able to export shared data in ordinary formats.
+### Portability and deletion
+Production design must define export, deletion and unpairing behavior, including sensitive shared data.
 
 ### Explainability
-Automated classification and recommendation should expose enough reasoning for users to understand important decisions.
+Automated classification/recommendation should provide useful reasoning and never claim certainty about a partner's current desire or consent.
 
 ### Graceful degradation
-Core capture and retrieval should remain useful even when AI enrichment or external metadata providers fail.
+Core shared-space functions remain useful if AI/external metadata providers fail.
 
-## Explicit non-goals for V1
-
+## Explicit non-goals
 - full messaging;
-- relationship counseling;
-- relationship scoring;
+- relationship counseling or health scoring;
+- sexual compatibility scoring;
+- coercive or persuasion mechanics;
 - expense accounting;
-- bank connections;
-- continuous background location tracking;
+- continuous covert location tracking;
 - comprehensive social feed;
-- autonomous planning/purchasing;
-- attempting to replace Wayfare;
-- building every content-category integration.
+- autonomous sexual/relationship decision-making;
+- replacing direct partner communication;
+- attempting to replace Wayfare.
 
 ## Open requirement questions
-
-See `docs/open-questions.md` for unresolved decisions rather than silently encoding assumptions into implementation.
+See `docs/open-questions.md`. New implementation decisions should preserve the distinction between **shared transparency** and **mandatory participation**.
