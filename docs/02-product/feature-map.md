@@ -18,6 +18,7 @@ This map separates the **long-term product surface** from **validation scope**. 
 - images/screenshots;
 - generic saved objects;
 - question cards;
+- spiritual reflections/invitations;
 - source attribution;
 - automatic categorization;
 - search/filter;
@@ -36,7 +37,7 @@ This map separates the **long-term product surface** from **validation scope**. 
 - resurfacing;
 - semantic retrieval later.
 
-Candidate views include Watch, Listen, Eat, Go, Do, Read, Want, Travel, Intimacy and Other. Categories should be views over shared objects rather than isolated databases wherever possible.
+Candidate views include Watch, Listen, Eat, Go, Do, Read, Want, Travel, Intimacy, Faith and Other. Categories should be views over shared objects rather than isolated databases wherever possible.
 
 ## C. Presence & Expression — **Core product pillar**
 The objective is co-presence, not messaging.
@@ -45,7 +46,7 @@ The objective is co-presence, not messaging.
 - tap/poke/kiss and playful gestures;
 - customizable affectionate or flirtatious gestures;
 - “leave something for you” objects;
-- song/photo/note in the room;
+- song/photo/note/reflection in the room;
 - subtle room changes/traces;
 - synchronous lightweight reactions;
 - Shared Question Cards: structured prompts sent into the room without creating a chat thread.
@@ -53,7 +54,7 @@ The objective is co-presence, not messaging.
 Avoid building a parallel messenger.
 
 ## D. Intimacy & Desire — **Core product pillar**
-Intimacy is not a novelty tab or a post-product add-on. For consenting adult couples, sexual and romantic expression is one of the dimensions the shared digital home is explicitly designed to support.
+Intimacy is not a novelty tab or a post-product add-on. For consenting adult couples, sexual and romantic expression is one dimension the shared digital home explicitly supports.
 
 Core concepts:
 - openly shared desires, fantasies, fetishes, kinks, curiosities, likes and dislikes;
@@ -67,54 +68,76 @@ Core concepts:
 - discreet device/notification presentation;
 - no libido, sexual-performance, compatibility or participation scoring.
 
-### Shared transparency model
-BetweenUs currently has no private answer vault inside the couple space. If a person intentionally submits an intimate answer, it becomes visible to the paired partner. The interface must communicate that before submission.
-
-Transparency does **not** mean mandatory participation. Either partner can answer, pass, select Not now, or leave a prompt unanswered. The product must never interpret a fantasy, kink, historical preference or previous answer as consent to a present sexual activity.
+Transparency does **not** mean mandatory participation. The product must never interpret a fantasy, kink, historical preference or previous answer as consent to a present sexual activity.
 
 Detailed interaction specification: `docs/03-experience/shared-question-cards.md`.
 
-## E. Shared Question Cards — **Core interaction primitive / prototype priority**
+## E. Spiritual Intimacy / Faith Together — **Core relationship dimension; staged implementation**
+For couples who choose it, BetweenUs should support shared spiritual life as companionship rather than religious monitoring. The initial researched model is Islamic spiritual intimacy.
+
+For a Muslim couple this can include:
+- “pray together?” invitations;
+- prayer-time-aware invitations/reminders when enabled;
+- shared duas and intentions;
+- Qur'an passages and authenticated hadith saved for each other;
+- reflections about marriage, mercy, gratitude and faith;
+- faith-oriented Question Cards;
+- couple learning/read-together items;
+- Ramadan/Qiyam/charity-oriented shared moments later.
+
+Explicitly avoid:
+- piety scores;
+- partner prayer-completion comparisons;
+- missed-prayer alerts about the other person;
+- worship streak competition;
+- inferred religious judgment;
+- unsourced/generated scripture or hadith.
+
+Detailed Islamic experience specification: `docs/03-experience/spiritual-intimacy-islam.md`.
+
+## F. Shared Question Cards — **Core interaction primitive / prototype priority**
 Questions are objects placed in the shared room: “chatting without chatting.”
 
 - either partner can write/send a question;
 - BetweenUs may suggest questions;
 - both partners can see submitted answers;
 - answer, pass, not-now, or ignore;
-- intimate and non-intimate categories use the same primitive;
+- intimate, spiritual and everyday categories use the same primitive;
 - answered cards may contribute intentionally shared context to memory/intelligence;
 - no read-receipt pressure, unanswered-count guilt or response-time scoring.
 
-Possible domains: desire, affection, fantasies, boundaries, dates, movies, trips, food, memories, playful hypotheticals and relationship discovery.
+Possible domains: desire, affection, fantasies, boundaries, faith, dates, movies, trips, food, memories, playful hypotheticals and relationship discovery.
 
-## F. Decision Support — **Core / staged implementation**
-Intent prompts include What should we watch/eat/do? Where should we go? and, when appropriate, intimacy-related shared intentions.
+## G. Decision Support — **Core / staged implementation**
+Intent prompts include What should we watch/eat/do? Where should we go? and, when appropriate, intimacy-related or spiritual shared intentions.
 
 Constraints can include time, rough budget, distance, mood/energy, at-home/go-out and content category.
 
 Output should be 3–5 candidates with an explanation of why each fits. Shared history should be preferred before generic discovery.
 
-## G. Discovery — **Post-validation expansion**
+## H. Discovery — **Post-validation expansion**
 - small contextual recommendation sets;
 - nearby activities/events;
 - recipes/books/media/places/games;
 - couple-relevant romantic/intimate prompts or ideas only where enabled and appropriate;
+- vetted faith content where explicitly enabled;
 - explicit “why this” explanation;
 - dismiss/not-interested feedback;
 - no default infinite feed.
 
-## H. Return / “While you were away”
+## I. Return / “While you were away”
 - something partner left;
 - a few newly captured ideas;
 - an answered/open question card where appropriate;
+- a spiritual reflection/invitation where relevant;
 - old item newly relevant;
 - shared goal/upcoming moment;
 - no unread-count guilt or streak loss.
 
-## I. Shared Living — **Later**
+## J. Shared Living — **Later**
 Lists, plans, reminders, shared goals and lightweight household coordination without turning the relationship into project management.
 
-## J. Money as Decision Support — **Later**
+## K. Money as Decision Support — **Later**
 - rough date budget;
 - activity affordability;
 - shared purpose funds;
@@ -123,10 +146,10 @@ Lists, plans, reminders, shared goals and lightweight household coordination wit
 
 Avoid debt ledgers, “who paid more” scores, partner spending alerts and judgmental budget policing.
 
-## K. Places & Travel — **Wayfare relationship**
+## L. Places & Travel — **Wayfare relationship**
 Saved places, distance/travel time, rough price, date suitability, trip possibilities and contextual decisions; future handoff/integration with Wayfare.
 
-## L. Memory after doing
+## M. Memory after doing
 - watched/visited/tried/did state;
 - separate partner ratings;
 - shared photo/memory attachment;
@@ -134,9 +157,9 @@ Saved places, distance/travel time, rough price, date suitability, trip possibil
 - “would do again”;
 - future recommendations informed by outcomes.
 
-For intimate material, memory must be deliberate; the product should not automatically construct sexual performance/history analytics.
+For intimate material, memory must be deliberate; the product should not automatically construct sexual performance/history analytics. For worship, avoid transforming acts of worship into performance history or comparative religious analytics.
 
-## M. Intelligence layer
+## N. Intelligence layer
 Cross-cutting rather than a destination tab:
 - classification and metadata extraction;
 - duplicate detection;
@@ -147,6 +170,7 @@ Cross-cutting rather than a destination tab:
 - time/budget/location reasoning;
 - semantic search;
 - question/prompt suggestion;
+- vetted faith-content retrieval where enabled;
 - eventual proactive nudges with strict notification restraint.
 
-For intimacy, intelligence may help the couple communicate and discover relevant shared possibilities, but must not claim to know current consent, pressure a partner, or present inferred sexual preferences as fact.
+For intimacy, intelligence must not claim to know current consent or pressure a partner. For faith, it must not fabricate religious sources, judge religiosity, or confidently generate religious rulings.
