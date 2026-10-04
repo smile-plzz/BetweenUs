@@ -2,54 +2,68 @@
 
 > A private digital home for two people.
 
-**Product concept:** BetweenUs helps a committed couple preserve the small things that matter, feel each other's presence, make decisions together, and turn scattered "we should do this" moments into shared experiences.
+**Product concept:** BetweenUs helps a committed adult couple preserve the small things that matter, feel each other's presence, express affection and desire, make decisions together, and turn scattered moments into shared experiences.
 
-**Status:** Product discovery / concept validation (v0.1)
+**Status:** Product discovery / concept validation (v0.2)
 
 ## North-star problem
 
-Couples continuously exchange high-value fragments across chat, social feeds, links, screenshots, spoken conversations, and everyday life: a movie to watch, a restaurant to try, a dress someone loved, a recipe, a fantasy, a trip, a song, a gift hint, or simply a small gesture. Messaging is excellent for the moment but poor as durable couple memory. Search and recommendation products, meanwhile, know the internet better than they know *us*.
+Couples continuously exchange high-value fragments across chat, social feeds, links, screenshots, spoken conversations and everyday life: a movie to watch, restaurant to try, dress someone loved, recipe, fantasy, kink, trip, song, gift hint, question, or small gesture. Messaging is excellent for the moment but poor as durable couple memory. Generic recommendation products know the internet better than they know *us*.
 
 BetweenUs is intended to become the shared layer between those moments and future action.
 
 > **Never lose a “we should do this” idea.**
 
-The long-term vision is larger: a digital space built specifically for exactly two people—somewhere between shared memory, presence, decision support, discovery, play, and a lightweight household companion. It is deliberately **not another messenger, task manager, social network, surveillance tool, or financial auditor**.
+The long-term vision is larger: a digital space built specifically for exactly two people—somewhere between shared memory, presence, intimacy, decision support, discovery, play and lightweight shared living. It is deliberately **not another messenger, task manager, social network, surveillance tool, relationship score or financial auditor**.
 
-## Core product loop
+## Core product loops
 
 **Capture → Remember → Understand → Resurface → Decide → Do together → Learn**
 
-The app should require less organization from the couple over time, not more. Intelligence exists to organize and resurface their shared context; it is not presented as a human-like third participant.
+and
+
+**Express → Respond voluntarily → Understand each other → Create shared context**
+
+The app should require less organization over time, not more. Intelligence organizes and activates shared context; it is not presented as a human-like third participant.
 
 ## Product pillars
 
-1. **Shared memory** — preserve meaningful things without requiring database maintenance.
-2. **Presence & expression** — lightweight ways to feel that the other person is in the shared digital home.
-3. **Shared decisions** — reduce choice overload using both partners' actual history, reactions, context, time and rough budget.
-4. **Discovery** — introduce a small number of relevant new possibilities and explain why they fit the couple.
-5. **Living together** — gradually support lists, plans, goals and practical coordination without turning the relationship into project management.
+1. **Shared Memory** — preserve meaningful things without database maintenance.
+2. **Presence & Expression** — lightweight ways to feel and interact inside the shared digital home without rebuilding chat.
+3. **Intimacy & Desire** — help consenting adult partners communicate desire, fantasies, kinks, preferences and boundaries with less friction and no scoring or pressure.
+4. **Shared Decisions & Discovery** — reduce choice overload using both partners' history, reactions, context, time and rough budget while introducing a finite set of relevant possibilities.
+5. **Shared Living** — gradually support plans, lists, goals and practical coordination without turning the relationship into project management.
+
+## Shared Question Cards
+
+A core interaction primitive is **chatting without becoming a chat app**. Either partner can place a Question Card in the shared room. Questions can be ordinary, playful, romantic or sexual. Submitted answers are shared and attributable; participation remains voluntary through Answer, Pass, Not now, or simply leaving the card unanswered.
+
+Question Cards give BetweenUs a way to support candid communication and learn intentionally shared couple context without introducing a conventional message thread.
+
+See [Shared Question Cards](docs/03-experience/shared-question-cards.md).
 
 ## Important boundaries
 
-- The space is designed for **exactly two paired users**.
-- There is no product concept of separate private rooms. Content placed in BetweenUs belongs to the shared space, while authorship, reactions and individual preferences remain attributable when useful.
-- The app is **not a secret keeper**. Surprises can be inspired by shared history but planned outside the shared space.
-- Presence is consensual and symmetrical. Awareness must never silently become surveillance.
-- Intelligence should feel like a smart environment, **not a personified butler, chatbot, gendered character, or third member of the relationship**.
-- Discovery must reduce decision fatigue rather than create another infinite feed.
-- Money is an **enabler for shared decisions and goals**, not a mechanism for policing who spent what or who owes whom.
-- Intimate and sexual expression can be part of the couple's shared space, but it follows the same consent, safety and control principles as every other sensitive interaction.
+- Designed for **exactly two paired consenting adults**.
+- There are no separate private rooms in the current concept. Content intentionally submitted to BetweenUs enters the shared space, while authorship, reactions and preferences remain attributable.
+- **Shared transparency is not mandatory participation.** A partner can pass, choose Not now or not answer.
+- A stored fantasy, kink, preference or past answer is never equivalent to present consent.
+- The app is not a secret keeper; surprises can be inspired here and planned elsewhere.
+- Presence must never silently become surveillance.
+- Intelligence is a smart environment, not a personified butler/chatbot/third member.
+- Discovery reduces decision fatigue rather than creating an infinite feed.
+- Money enables shared decisions/goals rather than policing contribution.
+- Intimate/sexual expression is a foundational product domain, with elevated discretion, privacy and security requirements.
+- No relationship, sexual-performance, libido or compatibility scoring.
 
 ## V1 thesis
 
-The vision is intentionally broad; the first behavioral experiment is intentionally narrow.
+The vision is broad; the first experiments remain disciplined. V1 should validate both:
 
-We need to learn whether two people will naturally form the behavior:
+- **Capture behavior:** will two people naturally say “Put that in our app” and later act on what they saved?
+- **Expression behavior:** will lightweight Question Cards and shared signals make the space feel inhabited and useful in ways ordinary messaging does not?
 
-> **“Put that in our app.”**
-
-V1 should therefore prioritize frictionless capture, a useful shared collection, reactions, lightweight resurfacing, and a small decision experience before attempting the full digital-home vision.
+V1 therefore prioritizes frictionless capture, shared collection, reactions, lightweight resurfacing, a small decision experience, and a deliberately scoped Question Card prototype—including adult intimacy prompts—before attempting the complete digital-home vision.
 
 ## Documentation
 
@@ -64,6 +78,7 @@ Start with [Product Context](docs/00-product-overview/product-context.md), then 
 - [Feature Map](docs/02-product/feature-map.md)
 - [V1 Scope](docs/02-product/v1-scope.md)
 - [Experience Architecture](docs/03-experience/experience-architecture.md)
+- [Shared Question Cards](docs/03-experience/shared-question-cards.md)
 - [Intelligence Model](docs/04-intelligence/intelligence-model.md)
 - [Trust, Consent & Privacy](docs/05-trust/trust-consent-privacy.md)
 - [Technical Direction](docs/06-engineering/technical-direction.md)
@@ -74,14 +89,14 @@ Start with [Product Context](docs/00-product-overview/product-context.md), then 
 
 ## Relationship to Wayfare
 
-[Wayfare](https://github.com/smile-plzz/wayfare) remains a separate product. Its place-capture and trip-decision concepts are highly relevant to BetweenUs and may later become a travel/places capability or integration, but BetweenUs must not collapse Wayfare into itself during early validation.
+Wayfare remains a separate product. Its place-capture and trip-decision concepts are relevant to BetweenUs and may later become an integration, but early validation should not collapse the products together.
 
 ## Working rule
 
-Every proposed feature should answer three questions before entering scope:
+Every proposed feature should answer:
 
-1. Does this help two people **remember, feel, decide, or do** something meaningful together?
+1. Does this help two people **remember, feel, express, understand, decide, or do** something meaningful together?
 2. Can it happen with less effort than the behavior it replaces?
-3. Does it strengthen shared agency without creating obligation, surveillance, scorekeeping, or noise?
+3. Does it strengthen shared agency without creating obligation, surveillance, scorekeeping or noise?
 
 If not, it probably does not belong in BetweenUs.
