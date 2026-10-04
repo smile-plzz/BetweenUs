@@ -1,162 +1,333 @@
 # Technical Direction
 
-> This is architectural guidance for discovery. Technology choices should remain reversible until the V1 behavior is validated.
+> Development-ready architectural guidance for the first validation build. Keep implementation reversible where evidence is weak; be strict where privacy/security is structural.
 
 ## Engineering objective
 
-Build the smallest system that can reliably test pairing, capture, shared state, resurfacing and decision support while leaving room for later mobile integrations.
+Build the smallest reliable system that supports the two validated product loops:
 
-## Recommended shape
+**Memory:** Capture → Remember → Understand → Resurface → Decide → Do → Learn
 
-### Client
-Mobile-first web/PWA for rapid iteration, with native/share-extension work introduced where needed to achieve genuinely low-friction capture.
+**Expression:** Express → Respond voluntarily → Understand → Shared context
 
-A pure web app may be insufficient for the most important behavior if OS share-sheet capture is awkward. Treat capture ergonomics as a product requirement, not a framework preference.
+The first system must support exactly-two pairing, synchronized shared state, capture, reactions, Question Cards, sensitivity/discretion, basic resurfacing and later decision ranking without requiring an AI-heavy architecture.
 
-### Backend
-A shared backend is required early because the core unit is two users with synchronized state.
+## Recommended repository shape
+
+A pragmatic monorepo can evolve toward:
+
+```text
+apps/
+  web/                 # mobile-first web/PWA
+  api/                 # only if backend logic is not colocated/serverless
+packages/
+  domain/              # shared types, validation, state machines
+  ui/                  # reusable UI primitives
+  config/              # lint/ts/build config
+  intelligence/        # deterministic ranking/enrichment interfaces
+supabase/ or db/
+  migrations/
+  policies/
+  seeds/
+  tests/
+docs/
+```
+
+Do not create services merely to look scalable. The early product benefits more from a coherent domain model and strong authorization than microservices.
+
+## Client
+
+Start mobile-first. A PWA/web implementation is efficient for product iteration, but capture ergonomics are a product requirement. If OS share-sheet friction prevents the desired habit, introduce a native wrapper/share extension rather than defending the web stack.
+
+Core screens for the first vertical slice:
+- authentication/pairing;
+- Our Space;
+- Our Things;
+- quick capture;
+- item detail/reaction;
+- Question Card create/view/respond;
+- minimal settings for privacy/discreet previews.
+
+## Backend / platform
+
+A shared backend is required immediately.
 
 Capabilities:
 - authentication;
-- couple-space membership;
-- relational/shared object storage;
-- media metadata;
+- User/CoupleSpace/Membership authorization;
+- relational object storage;
+- Question Card state;
 - reactions;
-- event history;
-- recommendation queries;
-- optional realtime presence later.
+- enrichment jobs;
+- realtime synchronization where useful;
+- event instrumentation;
+- media storage later;
+- recommendation queries.
 
-### Database
-A relational model is appropriate for early product state; PostgreSQL is a strong default.
+PostgreSQL is the default relational model. A platform such as Supabase is a reasonable implementation choice because auth, Postgres, RLS, storage and realtime align with the problem, but the domain model should not depend on provider-specific magic unnecessarily.
 
-## Conceptual data model
+## Canonical domain model
 
 ### User
-- id
-- display_name
-- avatar
-- created_at
+- `id`
+- `display_name`
+- `avatar_url`
+- `created_at`
 
 ### CoupleSpace
-- id
-- created_at
-- state
+- `id`
+- `state` (active / unpairing / closed)
+- `created_at`
 
 ### Membership
-- couple_space_id
-- user_id
-- joined_at
-- status
+- `couple_space_id`
+- `user_id`
+- `status`
+- `joined_at`
+- `left_at`
 
-Constraint: active CoupleSpace has maximum two active members.
+Invariant: maximum two active memberships.
 
-### Item
-- id
-- couple_space_id
-- created_by
-- type
-- title
-- note
-- source_url
-- source_type
-- status (saved/considering/done/archived)
-- created_at
-- experienced_at
+### SharedObject
+Universal durable object for captured/shared material.
+- `id`
+- `couple_space_id`
+- `created_by`
+- `kind` (link, place, media, recipe, product, activity, note, faith_reference, intimate_idea, etc.)
+- `title`
+- `body/note`
+- `source_url`
+- `source_type`
+- `status` (saved / considering / done / archived)
+- `sensitivity_class`
+- `preview_policy`
+- `created_at`
+- `experienced_at`
 
-### ItemMetadata
-Flexible type-specific metadata: location, price range, duration, media identifiers, etc. Avoid forcing every content type into columns prematurely.
+Do not create a separate table/product architecture for every category unless its behavior truly differs.
+
+### ObjectMetadata
+Flexible type-specific structured metadata with provenance/confidence where extracted: location, price range, duration, external IDs, etc.
 
 ### Reaction
-- item_id
-- user_id
-- reaction/rating
-- created_at / updated_at
+- `object_id`
+- `user_id`
+- `reaction_type`
+- `value`
+- timestamps
 
-Unique per relevant signal type/user/item.
+Signals remain attributable; do not collapse them into one couple rating.
 
-### Experience
-- item_id
-- happened_at
-- optional shared note/media
+### QuestionCard
+- `id`
+- `couple_space_id`
+- `created_by`
+- `prompt_source` (custom / curated / system)
+- `prompt_text`
+- `domain` (everyday / playful / affection / intimacy / faith / decision / other)
+- `sensitivity_class`
+- `state` (shared / open / resolved / archived)
+- `created_at`
+- `resolved_at`
+
+### QuestionResponse
+- `question_card_id`
+- `user_id`
+- `state` (answered / passed / not_now)
+- `answer_payload`
+- `created_at`
+- `updated_at`
+
+No row is required for unanswered. This avoids treating non-response as a submitted decision.
 
 ### Trace
-For lightweight presence/expression objects with explicit retention rules.
+Short-lived shared presence/expression object:
+- gesture;
+- leave-for-you;
+- room trace;
+- retention/expiry;
+- sensitivity.
+
+### Experience
+Optional ordinary-object completion/memory state. Do not automatically create sexual-performance or worship history.
 
 ### Goal
-Later: purpose, target amount/value, progress semantics.
+Later shared-living primitive for purpose funds/plans. Not required for initial vertical slice.
 
-## Event model
+## Authorization / RLS
 
-Track product events needed for validation without creating surveillance analytics.
+Authorization is a first-class deliverable.
 
-Useful events:
-- item captured;
-- capture source;
-- extraction success/failure;
-- partner reacted;
-- item resurfaced;
-- decision mode opened;
-- candidate selected;
-- item completed;
-- return after inactivity.
+For every couple-scoped table:
+- reads require active membership in the row's CoupleSpace;
+- writes require active membership and correct actor identity;
+- users cannot spoof `created_by`/`user_id`;
+- cross-couple access must fail even if an ID is guessed;
+- unpaired/revoked membership must stop future sensitive reads immediately.
 
-Avoid collecting unrelated behavioral telemetry “just in case.”
+Write automated policy tests before adding explicit media/location.
 
 ## Content ingestion pipeline
 
-1. Receive raw input.
-2. Persist raw source immediately.
+1. Client submits raw input.
+2. Validate membership and persist SharedObject immediately.
 3. Return success to client.
 4. Enrich asynchronously:
    - canonical URL;
    - Open Graph metadata;
    - content type;
-   - image;
-   - location/price only from trustworthy sources;
-   - confidence/provenance.
-5. Notify/update client silently.
+   - safe preview image;
+   - location/price only from trustworthy evidence;
+   - confidence + provenance.
+5. Update object/realtime client.
 
-**Persistence must precede enrichment.**
+**Persistence precedes enrichment.** AI failure must never lose a capture.
 
-## Recommendation V1
+## Question Card state machine
 
-Do not begin with an LLM-heavy architecture.
+```text
+DRAFT (client/local optional)
+  -> OPEN
+      participant A/B independently: unanswered | answered | passed | not_now
+  -> RESOLVED (explicit or policy-driven)
+  -> ARCHIVED
+```
 
-A transparent scoring model can combine:
-- both users' reactions;
-- saved-by-partner signal;
-- category match;
-- completion status;
-- explicit constraints;
-- recency/time context.
+The global card state must not overwrite participant state. Pass/Not now are valid outcomes, not errors. No automatic reminder loop should be coupled to the state machine.
 
-This is easier to debug and validate. AI can assist extraction, semantic retrieval and explanation after the core behavior works.
+## Sensitivity architecture
+
+Do not bolt this on later. Shared objects/cards/traces should carry sensitivity/preview policy from the beginning.
+
+At minimum distinguish:
+- ordinary;
+- private-couple;
+- explicit-intimate;
+- higher-sensitivity contextual classes as needed.
+
+Sensitive payloads must be excluded/redacted from routine analytics and error logs. Notification rendering must consult sensitivity/preview policy.
+
+## Event model for validation
+
+Track behavior, not raw relationship content.
+
+Useful events:
+- `pair_invite_created`
+- `pair_joined`
+- `object_captured`
+- `capture_enrichment_succeeded/failed`
+- `reaction_set`
+- `question_card_created`
+- `question_card_answered/passed/not_now`
+- `object_resurfaced`
+- `decision_opened`
+- `candidate_selected`
+- `object_completed`
+- `return_after_inactivity`
+
+Properties should be structural (domain, source type, latency, sensitivity class where safe), not raw answer/note/explicit text.
 
 ## Realtime
 
-Realtime synchronization of saves/reactions is useful. Realtime broadcasting of user activity is a separate, higher-sensitivity feature and should not be accidentally enabled simply because the infrastructure supports it.
+Use realtime for shared-state synchronization (new object, reaction, card response) where it improves the room feeling. Realtime infrastructure does **not** imply broadcasting all user activity.
 
-## External integrations
+Live presence/location are separate higher-sensitivity product capabilities and should remain feature-flagged/off until designed.
 
-Potential later integrations:
-- OS share extensions;
-- maps/location;
-- movie/media metadata;
-- music;
-- calendar;
-- Wayfare;
-- weather/events;
-- optional AI providers.
+## Recommendation V1
 
-Each integration should justify cost, privacy exposure and dependency risk.
+Start deterministic and explainable.
+
+Candidate score can combine:
+- explicit intent/category match;
+- Partner A signal;
+- Partner B signal;
+- saved-by-partner signal;
+- not-yet-completed;
+- explicit time/budget/distance constraints;
+- modest recency/context weighting.
+
+Return a small set plus reason codes that UI can turn into plain explanations. Avoid LLM-generated ranking as the source of truth.
+
+## Intelligence integration boundary
+
+Define interfaces so AI providers can be swapped/disabled:
+- `enrich(sharedObject)`
+- `classify(sharedObject)`
+- `semanticSearch(query, coupleSpace)`
+- `suggestPrompts(context)`
+- `explainRecommendation(reasonCodes)`
+
+Sensitive-domain policy should run **before** an external provider call and decide whether content is eligible to leave the system.
+
+Faith source retrieval should use a vetted/provenanced corpus, not unconstrained generation.
+
+## Notifications
+
+Notification payload generation is server-side policy, not arbitrary client text.
+
+Rules:
+- generic by default for sensitive objects/cards;
+- never include explicit media in push payloads;
+- respect user preview preference;
+- no guilt/reminder loops for unanswered Question Cards;
+- no partner worship-completion notifications.
+
+## Testing priorities
+
+### Domain tests
+- maximum-two membership invariant;
+- Question Card participant states;
+- sensitivity/preview rules;
+- ranking reason codes.
+
+### Authorization tests
+- member A/member B access works;
+- unrelated user cannot read/write;
+- spoofed actor IDs rejected;
+- unpaired member loses access;
+- sensitive media/object paths enforce membership.
+
+### Product-flow tests
+- capture succeeds when enrichment fails;
+- two clients synchronize reaction/card changes;
+- Pass/Not now never creates pressure/reminder state;
+- sensitive notification is redacted;
+- recommendation explanation matches actual reason codes.
+
+## Deployment / environments
+
+Use at least:
+- local/dev;
+- preview/staging;
+- production/pilot.
+
+Keep production/pilot data separate from development seeds. Never copy real intimate couple data into developer fixtures/logs.
+
+## Immediate vertical slice
+
+Build this end-to-end before broad feature work:
+
+1. User A signs in and creates CoupleSpace.
+2. A invites User B; B joins.
+3. A captures a real URL/note.
+4. B sees it and reacts.
+5. A creates a Question Card.
+6. B answers/passes/not-now; A sees the submitted state.
+7. Both return to Our Space and see a finite composed state.
+8. Basic analytics confirm flow without recording raw private content.
+
+If this slice is not delightful/reliable, do not rescue it by adding finance, location, richer sex modules, faith modules, Wayfare, or a giant recommendation system.
 
 ## Engineering principles
 
+- secure shared-state foundation before feature abundance;
 - source provenance over guessed facts;
+- persistence before enrichment;
 - graceful degradation;
-- shared data exportability;
-- minimal vendor lock-in during validation;
-- secure defaults;
-- no paid API dependency unless it materially validates the core hypothesis;
+- privacy by data minimization;
+- no raw sensitive telemetry;
+- shared data exportability eventually;
 - feature flags for sensitive experiments;
-- migration-friendly schema because taxonomy will change.
+- migration-friendly schema;
+- minimal vendor lock-in where practical;
+- optimize for learning, not architectural theater.
