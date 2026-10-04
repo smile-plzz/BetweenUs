@@ -2,127 +2,188 @@
 
 ## Principle
 
-**BetweenUs should be intelligent without becoming a character.**
+> **The house is smart; there is no digital roommate.**
 
-There is no named assistant. Intelligence appears through organization, retrieval, ranking, explanation and timely resurfacing.
+BetweenUs intelligence is environmental infrastructure. There is no named/gendered assistant and no artificial third participant in the relationship. Intelligence appears through organization, retrieval, ranking, explanation, prompt selection and timely resurfacing.
 
-## Three engines
+The model should know **what the couple intentionally taught the home**, not pretend to psychologically know the couple.
+
+## Four engines
 
 ### 1. Memory Engine
-
-Purpose: turn messy captured fragments into durable shared context.
+Purpose: turn messy shared fragments into durable context.
 
 Responsibilities:
-- ingest URLs/text/images;
-- preserve original source/evidence;
+- ingest URLs/text/images and structured shared objects;
+- preserve source/evidence before enrichment;
 - extract title/preview/type;
 - classify into useful views;
 - detect duplicates;
-- attach metadata;
+- attach metadata with provenance/confidence;
 - support semantic retrieval;
-- preserve contributor and reactions;
-- track lifecycle from idea to experience.
+- preserve contributor and independent reactions;
+- track ordinary lifecycle from possibility to experience;
+- apply sensitivity/retention metadata where relevant.
 
-Rule: automatic extraction must never be required for successful saving.
+**Rule:** saving never depends on successful extraction or AI.
 
-### 2. Decision Engine
+### 2. Expression Engine
+Purpose: help the shared space support lightweight communication without becoming chat.
 
-Purpose: reduce a large shared collection into a few actionable options.
+Responsibilities:
+- suggest optional Question Cards/prompts;
+- match prompt domain and tone to explicitly enabled context;
+- remember voluntarily submitted answers where retention is appropriate;
+- avoid repeatedly surfacing passed/ignored prompts;
+- support affectionate/playful/intimate/spiritual contexts without flattening them into one voice;
+- never turn participation volume into relationship scoring.
+
+For sexual context, the engine may use intentionally shared preferences to make a prompt relevant, but it must never infer current consent or provide pressure tactics. For faith context, it may retrieve vetted material but must not judge religiosity or fabricate scripture/hadith.
+
+### 3. Decision Engine
+Purpose: reduce shared history into a few actionable options.
 
 Inputs may include:
-- explicit intent (watch/eat/go/do);
-- each partner's signals;
-- mutual preference strength;
-- whether an item is already completed;
-- recency without over-weighting it;
-- available time;
+- explicit intent (watch/eat/go/do/etc.);
+- Partner A signals;
+- Partner B signals;
+- overlap/disagreement;
+- saved-by-partner signal;
+- completion state;
+- time;
 - rough budget;
 - distance/travel time;
-- mood/energy where explicitly provided;
-- current location where consented;
-- availability/context.
+- mood/energy when explicitly provided;
+- current/coarse location when explicitly enabled;
+- source confidence/availability.
 
 Output:
-- 3–5 candidates;
-- simple explanation per candidate;
-- confidence/unknowns internally;
-- ability to expand or adjust constraints.
+- usually 3–5 candidates;
+- plain-language reason per candidate;
+- internal confidence/unknowns;
+- ability to adjust one useful constraint or expand results.
 
-### 3. Discovery Engine
+### 4. Discovery Engine
+Purpose: introduce a small number of new possibilities when the shared collection is insufficient or exploration is explicitly wanted.
 
-Purpose: introduce a small number of new possibilities when shared history is insufficient or exploration is requested.
+Rules:
+- shared history normally outranks generic discovery;
+- clearly distinguish saved vs. externally discovered options;
+- use finite recommendation sets, not an engagement feed;
+- explain why a new item plausibly fits;
+- respect sensitive-domain boundaries.
 
-Discovery should learn from the couple but remain transparent about external vs. saved items.
+## The Us model
 
-It must not default to an infinite engagement feed.
+Do **not** collapse the couple into one preference vector.
 
-## The “Us” model
+Maintain conceptually:
+- Partner A's attributable signals;
+- Partner B's attributable signals;
+- shared/overlap signals for a specific object or context;
+- disagreement;
+- unknown/unexplored state;
+- time/version where preferences can change.
 
-Do not collapse two people into one vector/profile.
+The useful output is an **Us layer**, not an assertion that both people have identical tastes.
 
-Conceptually maintain:
+A candidate may be excellent when one partner is enthusiastic and the other neutral. A mutual match should not require symmetry.
 
-- Partner A preference signals;
-- Partner B preference signals;
-- intersection/compatibility for a specific item/context;
-- uncertainty due to missing data.
+## Context and tone model
 
-A candidate can be useful even when only one person strongly wants it and the other is neutral. Ranking should not require identical taste.
+Tone is contextual, not global. The system can be:
+- practical for planning;
+- warm/tender for affection;
+- playful for gestures/games;
+- explicit/raw where the couple has enabled and used sexual context;
+- reverent for faith experiences.
+
+Never let one domain's tone leak into another. In particular, faith does not sanitize sexual language, and sexual context must never contaminate spiritual/general recommendations.
 
 ## Explainability
 
 Every meaningful recommendation should be expressible in human terms.
 
-Examples:
-
+Good examples:
 - “You both marked this interested.”
-- “She saved this a month ago and you liked two similar comedies.”
-- “This is within the budget you set for tonight.”
+- “Your partner saved this and you liked two similar comedies.”
+- “It fits the budget you set for tonight.”
 - “It is close enough for the time you have.”
-- “Neither of you has rated this category yet—this is an exploration pick.”
+- “You have not explored this category together yet—this is an exploration pick.”
 
-Avoid pseudo-scientific outputs such as “97% relationship compatibility.”
+Avoid pseudo-authority such as “97% relationship compatibility,” “your partner secretly wants…,” or “the app knows she will like this.”
 
 ## Proactivity ladder
 
-Do not begin with maximum proactivity.
-
 ### Level 0 — Retrieval
-User searches/filters manually.
+Manual search/filter.
 
 ### Level 1 — On-demand intelligence
-User asks “what should we watch?” and system ranks.
+The couple asks for a decision or retrieval.
 
 ### Level 2 — In-app resurfacing
 Home quietly surfaces something timely.
 
 ### Level 3 — Optional nudge
-System suggests something when strong context exists, e.g. a weekend + saved nearby activity.
+A strong contextual signal creates a restrained notification/in-app suggestion.
 
 ### Level 4 — Integrated context
-Calendar/location/weather/budget context improves timing, with explicit permissions.
+Calendar/location/weather/budget and other sources improve timing with explicit permissions.
 
 V1 should live mainly at Levels 0–2.
 
+## Sensitive-domain rules
+
+### Sexual / intimate
+- do not infer current consent from preference/history;
+- do not generate persuasion strategies for overcoming refusal;
+- do not score libido, performance or compatibility;
+- treat explicit content/text as highly sensitive for storage, previews and third-party processing;
+- prefer user-authored/shared context over speculative inference.
+
+### Faith
+- retrieve from vetted/provenanced source material;
+- never fabricate Qur’an/hadith quotations/references;
+- do not generate piety scores or infer faith level;
+- do not interpret missed/non-participation as a moral or relationship signal;
+- distinguish source text from product/AI explanation.
+
+### Location / presence
+- use only enabled data at the granularity needed;
+- do not infer suspicious meaning from absence or disabled sharing;
+- do not create proof-of-location workflows.
+
+### Finance
+- use rough budget/purpose context to support choices;
+- do not infer fairness, contribution quality or relationship effort from spending.
+
 ## Data minimization
 
-The product can become extremely sensitive as it learns relationship preferences. Collect only what materially improves the shared experience.
+Collect only information that materially supports a chosen shared experience. BetweenUs can become unusually sensitive; “might be useful to AI later” is not sufficient justification.
 
-Do not collect intimate, location, financial or behavioral data merely because it might someday improve a model.
+Sensitive raw text/media should not automatically be sent to external AI providers. Core storage, retrieval and user-authored Question Cards must work without AI.
 
-## AI failure behavior
+## Failure behavior
 
-If classification fails:
+If extraction fails:
 - keep the item;
-- label unknowns;
+- preserve source;
+- mark unknowns;
 - allow correction;
-- never fabricate price/location/source facts.
+- never fabricate location/price/source facts.
 
 If recommendation confidence is weak:
 - say why choices are limited;
-- prefer saved evidence;
-- ask for one useful constraint rather than hallucinate certainty.
+- prefer known shared evidence;
+- ask for one useful constraint;
+- do not manufacture certainty.
 
-## Long-term opportunity
+If faith-source retrieval is uncertain:
+- do not present generated religious text as authoritative;
+- surface only verified source material or clearly label non-authoritative commentary.
 
-With enough history, BetweenUs can become a form of **relationship-specific retrieval system**: not a model that claims to understand the relationship psychologically, but a system that remembers the couple's expressed preferences and shared experiences better than generic consumer software can.
+## V1 implementation stance
+
+Do not begin with an LLM-heavy architecture. Start with deterministic/shared-state primitives and transparent ranking. Use AI selectively for enrichment, semantic retrieval, categorization and explanation after the core behavior works.
+
+The durable advantage is not “having AI.” It is building a **relationship-specific retrieval and decision system from intentionally shared context**.
