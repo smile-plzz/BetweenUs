@@ -1,127 +1,212 @@
 # Trust, Consent & Privacy
 
-## Why this is product-critical
+## Why this is architecture, not compliance polish
 
-BetweenUs may eventually contain unusually sensitive context: location, preferences, gifts, private photos, intimate ideas, shared plans, financial goals and relationship history.
+BetweenUs can contain unusually sensitive relationship context: explicit sexual text/media, fantasies/preferences, faith reflections, private photos, location/presence, gift signals, financial goals, shared history and information about two people at once.
 
-Trust cannot be a later compliance layer. It shapes the feature model.
+A breach or accidental disclosure here can be more harmful than losing an ordinary bookmark database. Trust therefore shapes the schema, authorization model, notifications, AI architecture, analytics and unpairing behavior from the first build.
 
 ## Shared-space contract
 
-Pairing should communicate clearly:
+Pairing communicates:
 
-> Things intentionally added to this space are shared with your paired partner.
+> **Things you intentionally submit to this couple space are shared with your paired partner.**
 
-There is currently no concept of private content *inside* the couple space. Users should never accidentally believe an item is private when it is shared.
+There is currently no private vault inside the couple space. The UI must never create a false expectation that a submitted answer/item is visible only to its author.
+
+This contract is about **visibility of submitted shared content**. It is not blanket permission for every capability the app could technically enable.
 
 ## Equal membership
 
-Neither partner should be positioned as the administrator/owner of the other person.
+Neither partner owns/administers the other. Both are members of the CoupleSpace.
 
-Production design must address:
-- equal access to shared content;
-- permission changes;
-- leaving/unpairing;
-- export;
-- deletion;
-- what happens to shared history after separation;
-- safety situations where normal symmetry may no longer be appropriate.
+Do not build:
+- “primary partner” powers over the other account;
+- one-sided monitoring settings;
+- administrator access to the partner's personal account;
+- asymmetrical ability to silently enable sensitive presence.
 
-These are unresolved product-policy questions, not implementation details.
+## Participation and current consent
 
-## Consent is feature-specific
+Shared transparency and voluntary participation coexist.
 
-Joining a shared space is consent to the shared-space model. It is **not blanket consent** to:
+For Question Cards and intimate interactions, a person can:
+- Answer;
+- Pass;
+- choose Not now;
+- leave the interaction unanswered;
+- change a preference later.
 
-- continuous live location;
-- broadcasting current activity;
-- exposing sensitive notification previews;
-- intimate media;
-- integrations with calendars/accounts;
-- financial account access.
+No state should create punishment, guilt, repeated pressure, compatibility penalties or “convince your partner” mechanics.
 
-Higher-sensitivity capabilities need separate, understandable controls.
+A stored fantasy, kink, preference, previous sexual answer, prior participation or relationship status is **not current consent to sexual activity**.
 
-## Presence controls
+## Capability-specific permission
 
-Presence features should be:
+Pairing alone does not authorize:
+- continuous/live location;
+- background activity broadcasting;
+- explicit notification previews;
+- explicit-media handling;
+- calendar/email/account integrations;
+- financial account access;
+- third-party AI processing of sensitive raw content.
 
-- explicit;
-- reversible;
-- understandable;
-- symmetrical by default;
-- visibly active when sensitive.
+Higher-sensitivity capabilities need explicit, understandable and reversible controls.
 
-Avoid covert/background monitoring patterns.
+## Sensitive-content classification
 
-## Location
+Every object that may contain sensitive content should support metadata such as:
+- sensitivity class (ordinary / private-couple / explicit-intimate / location / financial / faith-sensitive where useful);
+- preview policy;
+- notification policy;
+- retention policy;
+- external-processing eligibility;
+- media-download/cache policy.
 
-If implemented later:
-
-- default off;
-- clear reason for collection;
-- prefer coarse/on-demand location when sufficient;
-- make live sharing obvious;
-- allow immediate pause;
-- never frame disabling location as suspicious;
-- do not build “prove where you were” workflows.
+Classification should default conservatively when explicit/intimate content is known.
 
 ## Intimate content
 
-If supported:
+Before rich explicit-media support ships, define and test:
+- secure transport and storage;
+- strict CoupleSpace authorization;
+- signed/short-lived media access where appropriate;
+- discreet thumbnails/previews;
+- screenshot/device-level limitations the product can and cannot guarantee;
+- cache/temp-file behavior;
+- export and backup behavior;
+- deletion semantics;
+- unpairing behavior;
+- third-party processing boundaries;
+- platform/legal requirements for applicable jurisdictions.
 
-- private to the paired space;
-- secure transport/storage;
-- discreet previews;
-- explicit content controls;
-- careful handling of exports/backups;
-- straightforward deletion;
-- strong protection against accidental display.
+Do not promise that content cannot be copied by a paired recipient. The product can secure access; it cannot guarantee what another human does after legitimate viewing.
 
-A production implementation requires legal/safety review for applicable jurisdictions and platform policies.
+## Notifications are a data-leak surface
 
-## Notifications
+Support at least:
+1. **Generic/discreet** — e.g. “Something is waiting in BetweenUs.”
+2. **Normal preview** — safe non-sensitive context where enabled.
+3. **No sensitive push content.**
 
-Notifications are a privacy surface.
+Explicit sexual text/images and sensitive faith/personal content should never unexpectedly appear on a lock screen, widget, watch or shared device surface.
 
-Users should be able to choose:
-- full preview;
-- generic “something was left for you”;
-- no sensitive push content.
+## Presence and location
 
-## AI/data usage
+Presence should be understandable and reversible. Higher-sensitivity presence must be visibly active.
 
-If third-party AI services are introduced:
+If location is implemented later:
+- default off;
+- collect only for a clear feature purpose;
+- prefer coarse/on-demand location when enough;
+- make live sharing obvious;
+- provide immediate pause/revocation;
+- do not frame disabling it as suspicious;
+- do not build “prove where you were” or retrospective partner-audit workflows.
 
-- disclose what leaves the system;
-- minimize transmitted data;
-- avoid sending sensitive media/intimate text unless necessary and explicitly supported;
-- provide non-AI fallback for core storage/retrieval;
-- do not train external models on couple data without explicit informed permission.
+## Faith data
 
-## Breakup / unpairing is a first-class scenario
+Faith Together should not become a mechanism for religious surveillance.
 
-A couple product that only models happy continuation is incomplete.
+Do not:
+- compare prayer completion;
+- notify one partner that the other missed worship;
+- infer piety/religious status from activity;
+- expose sensitive spiritual reflections outside the couple space;
+- fabricate or silently alter Qur’an/hadith source material.
 
-Before production launch, define:
+## AI and external processing
 
-- whether each person can independently leave;
-- immediate access changes;
+If third-party AI/services are introduced:
+- document which data leaves BetweenUs and why;
+- minimize payloads;
+- avoid sending explicit media/intimate raw text by default;
+- do not send sensitive content merely for speculative personalization;
+- keep core storage/retrieval usable without AI;
+- never use couple data to train external models without explicit informed permission;
+- maintain provenance for extracted/generated metadata;
+- separate verified religious source material from generated commentary.
+
+## Authorization model — engineering requirement
+
+Every couple-scoped read/write must verify active membership in the correct CoupleSpace. Client-side filtering is not authorization.
+
+The database/API design should enforce:
+- maximum two active members per CoupleSpace;
+- no cross-couple object access;
+- user can act only as themselves;
+- membership state checked for sensitive reads/writes;
+- sensitive media access scoped to active authorization;
+- revoked/unpaired membership immediately blocks future sensitive access.
+
+If PostgreSQL/RLS is used, these rules should be expressed in policies and tested, not merely documented in UI code.
+
+## Analytics and logs
+
+Validation requires instrumentation, but logs can become a shadow copy of sensitive relationship data.
+
+Prefer events such as:
+- `question_card_answered`;
+- `item_captured`;
+- `decision_candidate_selected`;
+
+Avoid logging raw sexual answers, explicit prompt text, private notes, dua/reflection text, full source content or precise location into analytics/error systems unless strictly necessary and intentionally protected.
+
+Production logs must not become an easier route to couple data than the application database.
+
+## Unpairing / breakup — pre-production blocker
+
+A couple product that models only happy continuation is incomplete. Before sensitive production use, decide:
+- either person can independently leave;
+- immediate revocation of presence/location and future couple-space access;
+- what happens to shared objects;
 - export rights;
-- shared vs. contributed content ownership;
-- deletion requests;
-- safety escalation where one partner should not retain location/presence access.
+- deletion rights;
+- treatment of jointly enriched content;
+- explicit/intimate media retention/deletion;
+- pending notifications/jobs after unpairing;
+- safety path where normal symmetry is inappropriate.
 
-This should be designed before sensitive features ship.
+Until this policy is implemented, sensitive-data pilots should remain controlled and limited.
+
+## Account/device recovery
+
+Before sensitive production use, define:
+- recovery when a device/account is lost;
+- session revocation;
+- authentication strength;
+- whether app/device lock or biometric gate is offered;
+- how recovery avoids accidentally granting a new device broad access without adequate verification.
 
 ## Ethical red lines
 
 BetweenUs must not:
-
 - secretly track a partner;
-- score relationship health from app behavior;
-- shame a user for inactivity;
-- compare affection/contribution volumes competitively;
-- expose private couple data publicly by default;
-- make consent difficult to withdraw;
-- use jealousy/anxiety as an engagement mechanism.
+- score relationship health, sexual performance, libido or piety;
+- shame inactivity or refusal;
+- compare affection/contribution/worship competitively;
+- expose couple data publicly by default;
+- make permission withdrawal difficult;
+- use jealousy, anxiety, sexual pressure or religious guilt as engagement mechanics;
+- teach one partner how to overcome the other's refusal;
+- sell sensitive relationship data or build advertising profiles from it.
+
+## Pre-development vs. pre-production
+
+### Required from first implementation
+- CoupleSpace authorization;
+- sensitivity metadata;
+- discreet notification defaults;
+- minimal/redacted analytics;
+- feature flags for sensitive experiments;
+- no raw sensitive data in routine telemetry;
+- explicit participation states for Question Cards.
+
+### Must be resolved before broad production launch
+- complete unpairing/data lifecycle policy;
+- explicit-media storage/export/deletion design;
+- account/device recovery model;
+- legal/platform review where required;
+- external AI data-processing policy;
+- location/presence revocation behavior if those features ship.
