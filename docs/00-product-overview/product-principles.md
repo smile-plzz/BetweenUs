@@ -48,16 +48,30 @@ Use budget and goals to make shared choices possible. Do not make the default ex
 
 ## 12. Intimacy is legitimate, not a gimmick
 
-Affectionate and sexual expression can belong in a private couple space. Design it with the same seriousness given to privacy, consent and accidental exposure.
+Affectionate and sexual expression can belong in a private adult couple space. Design it with the same seriousness given to privacy, agency and accidental exposure. Do not euphemize consensual adult sexuality merely to make the rest of the product appear more respectable.
 
-## 13. No maintenance tax
+## 13. Whole relationship, not one tone
+
+BetweenUs can be reverent in spiritual moments, tender in affectionate moments, practical in everyday life, playful when the couple is joking, and unapologetically explicit in consensual sexual moments.
+
+One domain must not sanitize, moralize or dictate the emotional vocabulary of another. A Faith Together experience does not make sexual intimacy clinical or polite; an explicit sexual experience does not trivialize the couple's spiritual life. Both can belong authentically to the same relationship and the same shared home.
+
+Tone should follow the **context and the couple**, not a single global brand voice. Within sexual intimacy, the couple may prefer romantic, playful, direct, explicit/raw, kinky or other mutually comfortable language. Product copy and generated prompts should respect the selected context rather than forcing euphemisms or forcing explicitness.
+
+Tone independence never overrides agency: intensity of language is not evidence of present consent, and either partner remains free to pass, choose Not now, disengage or change preference.
+
+## 14. Spirituality supports companionship, not religious surveillance
+
+Where faith features are enabled, help partners invite, remember, reflect, learn and worship together. Do not quantify who is more religious, compare worship performance, infer piety, or turn missed practice into relationship pressure.
+
+## 15. No maintenance tax
 
 Every recurring manual action must justify itself. Prefer learning from natural behavior—saving, reacting, choosing, completing—over forms and profile upkeep.
 
-## 14. Memory should become more valuable with time
+## 16. Memory should become more valuable with time
 
 A saved object should gain context through reactions, decisions, visits, ratings and memories rather than becoming stale database clutter.
 
-## 15. Build the wedge before the world
+## 17. Build the wedge before the world
 
-The vision is a digital home. V1 is not. Prove the capture → resurface → decide behavior before expanding into every shared-life category.
+The vision is a digital home. V1 is not. Prove the capture → resurface → decide behavior and the lightweight expression loop before expanding into every shared-life category.
