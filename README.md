@@ -157,6 +157,7 @@ It explicitly does **not** need full chat, continuous location, bank connections
 - [30-Day Couple Test](docs/07-validation/30-day-couple-test.md)
 - [Roadmap](docs/08-roadmap/roadmap.md)
 - [Decision Log](docs/09-decisions/decision-log.md)
+- [Development Handoff](docs/10-development/development-handoff.md) — canonical build order, epics and pilot definition of done.
 - [Open Questions](docs/open-questions.md)
 
 ## Relationship to Wayfare
