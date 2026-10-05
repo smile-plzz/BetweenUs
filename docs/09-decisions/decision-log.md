@@ -83,3 +83,21 @@ This log captures decisions already made in product discovery so future work doe
 
 ## D024 — Religious source integrity is a product requirement
 **Decision:** Qur'an/hadith content must preserve trustworthy provenance. Generative AI must not invent scripture/hadith or present unsupported religious rulings as authoritative.
+
+## D025 — V1 uses a single Next.js application and shared PostgreSQL schema
+**Decision:** Implement the vertical slice in one TypeScript application. Supabase is the hosted Auth/PostgreSQL boundary; a local PGlite PostgreSQL adapter exercises the identical policies without credentials. Local auth is explicitly development-only and blocked on Vercel.
+
+## D026 — Synchronize shared state without broadcasting presence
+**Decision:** V1 uses visible-tab polling every four seconds and immediate refresh after mutation/return. No online status, last seen, activity broadcast, or websocket presence is inferred. Realtime transport can be substituted later without changing the domain.
+
+## D027 — Immediate attributable answers, revisable participation
+**Decision:** Submitted answers are immediately shared. The sender can also answer. Each person can change Answer/Pass/Not now or withdraw their own response; no row is unanswered. Either can put a card away. A member's submitted state removes a card from their active Home surface, while Questions retains it. This is a reversible V1 choice for the open reveal/lifecycle questions.
+
+## D028 — Controlled intimacy and optional faith use existing primitives
+**Decision:** Explicit text requires an installation flag and both members' independent opt-in. Either withdrawal blocks explicit reads/writes. Faith Together also requires both opt-ins and ships only personal reflections/dua questions; no scripture corpus or worship tracking. Sensitive completion/performance history is not supported.
+
+## D029 — Close-and-revoke lifecycle for the controlled pilot
+**Decision:** Either member may close the space, immediately removing both memberships' access and revoking invites. Closed data is retained without member access until a verified operator deletion under the documented pilot procedure. Neither a new partner nor the original creator inherits access. Self-service export, permanent deletion, and account/device recovery remain requirements before broad production; this limited pilot policy does not erase those open questions.
+
+## D030 — Local source preservation before provider enrichment
+**Decision:** V1 asynchronously records known URL hostname/provenance after saving. Conservative known-host categories are available without manual classification; arbitrary URL scraping/Open Graph/LLM processing is deferred. No third party receives shared content, and metadata/recommendations do not fabricate price, location, availability, or preferences.

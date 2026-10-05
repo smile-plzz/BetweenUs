@@ -10,6 +10,65 @@ A couple already creates this material every day: a Reel of a restaurant, a movi
 
 BetweenUs gives them somewhere to live **between the moment they are expressed and the moment they matter**.
 
+## Run the V1
+
+The runnable implementation is at the repository root. Product specifications below remain the source of truth. Implementation details: [V1 architecture](docs/06-engineering/v1-architecture.md), [pilot operations](docs/06-engineering/pilot-operations.md), and [build report](BUILD_REPORT.md).
+
+### Local development — no external credentials
+
+Use Node 24 LTS (`nvm use`) and npm:
+
+```bash
+npm ci
+cp .env.example .env.local
+npm run dev
+```
+
+Open `http://localhost:3000`. Create your account, accept the shared-space contract, create a space, and generate an invitation. Open a **separate browser profile or incognito window** for your partner; create a second account and join using the invitation link/code. Save a real URL, note, or idea, react independently, and place a Question Card. The home synchronizes while visible, normally within four seconds. Choose an optional moment during capture (Watch/Eat/Do), then use Decide Together. Known media hosts receive a conservative category without requiring manual organization.
+
+Local mode is a real server-side, disk-persistent PostgreSQL development path using PGlite and the same database policies as Supabase. It does not simulate another partner or use localStorage as the database. There is no preloaded couple history, default login, or secret. Data lives at `LOCAL_DATABASE_PATH` (default `.local/betweenus`), which is excluded from Git/deployment. Run **one server per local database**. Local auth has no email verification/recovery and must not be used for live intimate data or deployed to Vercel.
+
+To enable the controlled adult-text demonstration locally, set `ENABLE_INTIMACY_PILOT=true`, restart, and have **both** members independently opt in under Privacy and settings. Either can turn it off. Private/intimate previews remain generic until explicitly opened. Faith Together similarly requires both opt-ins and offers personal reflection/dua questions without scripture generation or worship tracking.
+
+The app asks for explicit backend configuration; it never silently changes databases if credentials are missing. If local data was created with an earlier development schema, stop the server and explicitly erase only disposable development data with:
+
+```bash
+npm run db:reset -- --confirm
+```
+
+This command uses the default `.local/betweenus` unless `LOCAL_DATABASE_PATH` is supplied in the shell. It does not load `.env.local`. Never reset a database containing real pilot data.
+
+### Supabase / hosted pilot
+
+1. Create a **dedicated** Supabase project. Apply `supabase/migrations/20261005075912_betweenus_foundation.sql` using the SQL editor, or `npx supabase link --project-ref YOUR_PROJECT_REF` followed by `npx supabase db push`. The mirror `db/schema.sql` is for local testing; do not apply both copies. `db/local-bootstrap.sql` is local-only and must never be applied to Supabase.
+2. Set `BETWEENUS_BACKEND=supabase`, `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and exact `APP_ORIGIN` in `.env.local` or your hosting environment. Use the publishable/legacy anon key; **no service-role key is needed or accepted by the application**.
+3. Set Supabase's site URL to the application origin and allow `https://YOUR_HOST/auth/callback` (or `http://localhost:3000/auth/callback` for development). Keep email confirmation enabled; configure SMTP. Set Auth's password minimum to 12 and review rate limits/session policy. Verify email, then sign in. If a confirmation doesn't exchange a session, sign in after confirming; profile completion is supported.
+4. Run `npx supabase db advisors --linked --type all` and repeat the A/B/C authorization flow against the hosted project. The migration revokes default anonymous grants and defines explicit authenticated access. The private helper schema must **not** be added to Data API exposed schemas.
+5. Keep intimate text disabled until the controlled-pilot trust/recovery review is complete. For Supabase, the authoritative installation flag is in `private.features`; see [pilot operations](docs/06-engineering/pilot-operations.md). `ENABLE_INTIMACY_PILOT` configures only the local adapter.
+
+Optional full local Supabase: `npx supabase start` requires Docker; the committed configuration applies the same migration, uses no preloaded couple data, and sets Auth callbacks/password length. Switch the application to Supabase mode using the local API URL/publishable key. This path was prepared but not exercised during this build.
+
+### Verification
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npx playwright install chromium
+npm run test:e2e
+npm run build
+```
+
+Domain/authorization tests run actual in-memory PostgreSQL and need no credentials. The Playwright test starts an isolated local server on port **3100**, creates separate A/B/C accounts, uses desktop/mobile browsers, and verifies the complete journey, access denial, and sensitive access withdrawal. It never reuses your regular server or hosted database. Its `.local/e2e-*` databases and screenshots/traces are disposable, ignored development artifacts. On Linux CI, use `npx playwright install --with-deps chromium`. CI runs lint, types, tests, build, and the browser journey.
+
+### Deployment
+
+Import this repository into Vercel as a Next.js project at the root. Build: `npm run build`. Set the Supabase environment variables above for each environment; use separate databases for development, preview, and pilot. Set the exact public HTTPS `APP_ORIGIN` for the deployment and add the matching Auth callback URL. A missing configuration fails clearly rather than creating a demo backend. Local mode is rejected on Vercel. No external AI, storage bucket, push service, or paid metadata API is needed.
+
+Self-hosted build: `npm run build`, then `npm run start`. Production requires HTTPS and the Supabase backend. The successful local build establishes deployment compatibility; a hosted deployment/email-delivery test requires your project credentials.
+
+**Current boundary:** this is a coherent controlled-pilot V1. Leaving closes the space and immediately revokes both memberships; retained closed data, manual deletion/export, account recovery, backup retention, and explicit-media safeguards still need the documented production lifecycle work before a broad sensitive launch.
+
 ## The product thesis
 
 > **Conversations are chronological. Couple memory is contextual.**
