@@ -14,7 +14,7 @@ BetweenUs gives them somewhere to live **between the moment they are expressed a
 
 The runnable implementation is at the repository root. Product specifications below remain the source of truth. Implementation details: [V1 architecture](docs/06-engineering/v1-architecture.md), [pilot operations](docs/06-engineering/pilot-operations.md), and [build report](BUILD_REPORT.md).
 
-Hosted setup progress and the exact resume checklist are recorded in [hosted deployment status](docs/06-engineering/hosted-deployment-status.md). The dedicated free Supabase project is prepared; Vercel workspace access must be reconnected before a live URL can be created.
+Hosted test installation: **[between-us-three-beta.vercel.app](https://between-us-three-beta.vercel.app/)**. The dedicated free Supabase project is connected, and the production sign-in screen/API smoke checks pass. Email confirmation/delivery and the complete hosted two-account journey still need verification. See [hosted deployment status](docs/06-engineering/hosted-deployment-status.md) for evidence and remaining checks.
 
 ### Local development — no external credentials
 
