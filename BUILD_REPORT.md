@@ -4,7 +4,8 @@
 
 - Repository: `smile-plzz/BetweenUs`
 - Delivery branch: **main**
-- Final application/engineering commit: **`aff503f318a7ea63034885f7473255fa02d7c6a0`**
+- Original V1 application commit: **`aff503f318a7ea63034885f7473255fa02d7c6a0`**
+- Latest tested application/engineering commit: **`738188d890eec53194bfbcd4d98892f646b617b3`**
 - Foundation checkpoint: `4c31c908f5508f2fbe87e97fb040b4ec7103aac4`
 - This report is a subsequent documentation-only commit. The exact delivery tip, including this report, is available with `git rev-parse origin/main` after fetching. Recording a report's own immutable Git SHA inside itself is circular; the application SHA above identifies the exact tested code.
 
@@ -28,7 +29,7 @@ A runnable, mobile-first private shared home. The source documents and canonical
 
 ## Architecture
 
-**Activity/discovery refinement:** Empty homes/collections now offer three daily starter activities, and Decide Together has optional finite public catalog exploration through TVMaze and Open Library. Selection reuses attributable shared capture; no fake couple history is seeded. Providers receive only fixed ordinary catalog queries, with bounded/validated responses and curated fallbacks. The operator can disable external requests with `BETWEENUS_DISCOVERY=curated`. See [discovery/starter architecture](docs/06-engineering/discovery-starters.md). The expanded suite has **30 passing tests and two passing browser journeys**; the production build includes authenticated `/api/ideas`. Hosted verification for this refinement is recorded in the deployment status.
+**Activity/discovery refinement:** Empty homes/collections now offer three daily starter activities, and Decide Together has optional finite public catalog exploration through TVMaze and Open Library. Selection reuses attributable shared capture; no fake couple history is seeded. Providers receive only fixed ordinary catalog queries, with bounded/validated responses and curated fallbacks. The operator can disable external requests with `BETWEENUS_DISCOVERY=curated`. See [discovery/starter architecture](docs/06-engineering/discovery-starters.md). The expanded suite has **30 passing tests and two passing browser journeys**; lint, type checking and production build pass. The live production browser also passed genuine provider sessions, shared capture/sync and finite catalog responses. All temporary identities/data were removed afterward. The build includes authenticated `/api/ideas`; [hosted verification](docs/06-engineering/hosted-deployment-status.md) records the details and remaining email-signup limitation.
 
 One root Next.js 16.3.8 / React 19.3 / TypeScript application, Zod validation, CSS responsive design, and Lucide icons. Exact package versions and the npm lockfile are committed; Node 24 LTS is recommended.
 
@@ -113,7 +114,7 @@ Use two browser profiles, create actual accounts, pair, and start with real ordi
 
 For a hosted pilot, apply the migration once to a dedicated Supabase project, configure verified-email Auth/SMTP, password length/rate limits, site URL and `/auth/callback` allowlist, and repeat provider-level authorization checks/advisors. Supabase's `private.features` is the hosted intimacy flag and defaults off. Import the root into Vercel as Next.js, set the hosted environment, and build with `npm run build`. Keep preview/test/pilot databases separate. Full steps are in README and the architecture/pilot documents.
 
-During the original V1 build, no Supabase project credentials or deployment identity were available. A real hosted project, SMTP confirmation/recovery, Supabase advisors, optional full local Supabase Docker stack, and Vercel deployment were **prepared but not exercised in that run**. The hosted follow-up above records subsequent Supabase provisioning/advisors/role checks; actual Auth/email/browser deployment checks remain pending. Local success is not presented as a hosted-security/deployment guarantee.
+During the original V1 build, no Supabase project credentials or deployment identity were available. A real hosted project, SMTP confirmation/recovery, Supabase advisors, optional full local Supabase Docker stack, and Vercel deployment were **prepared but not exercised in that run**. The hosted follow-up above records subsequent Supabase provisioning/advisors/role checks; Subsequent live verification passed genuine provider password-login sessions, pairing, capture/sync, reactions, a Question Card response, finite public catalogs, outsider denial and logout. Fixtures were seeded as confirmed test identities and removed afterward; actual signup email delivery/confirmation and recovery remain unverified. Local success is not presented as a hosted-security/deployment guarantee.
 
 ## Known limitations and deliberate deferrals
 
@@ -128,7 +129,7 @@ During the original V1 build, no Supabase project credentials or deployment iden
 
 ## Recommended next ten engineering tasks
 
-1. Configure a dedicated Supabase pilot and Vercel preview; verify email callbacks, schema/grants, advisors, two-device sync, and A/B/C authorization with real provider sessions.
+1. Complete Supabase Auth site/redirect/SMTP/recovery configuration and test self-service email confirmation; use an isolated database for Vercel previews. Production deployment and provider-session pairing/sync/A/B/C checks now pass; review sensitive flows before broader pilot use.
 2. Finish the shared-data lifecycle agreement and self-service leave/export/delete paths, including explicit content, backups, and safety exceptions.
 3. Implement verified account recovery, device/session listing/revocation, and stricter sensitive-operation session freshness before uncontrolled sensitive use.
 4. Add production request/abuse rate limits and content-free operational error codes/metrics; keep raw relationship content excluded.

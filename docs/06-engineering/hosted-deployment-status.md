@@ -21,9 +21,9 @@ Performance advisors identified eight unindexed foreign keys and eleven per-row 
 - Live URL: **https://between-us-three-beta.vercel.app/**.
 - Owner workspace: `smile-plzzs-projects`, ID `team_aR7JG2YPPjTCdZIHu8PHKB2R`, Hobby.
 - Existing project: `between-us`, ID `prj_8a0OQFmtjznAo3NbFY5udjhggDRs`.
-- Verified source: `smile-plzz/BetweenUs`, branch `main`, commit **`1a149b485e3272c1e5562acf7efbff0ba069d7dc`**.
-- Verified production deployment: **`dpl_BR7jXSJCBvefxzNTSPqL5FXMbtVW`**, status READY; build duration 41 seconds.
-- Immutable deployment URL: `https://between-rbm600xb6-smile-plzzs-projects.vercel.app`.
+- Verified application source: `smile-plzz/BetweenUs`, branch `main`, commit **`738188d890eec53194bfbcd4d98892f646b617b3`**.
+- Verified production deployment: **`dpl_5aagMPNYHa5HWA1dMcRbgTGghDhY`**, status READY; build duration 29 seconds.
+- Immutable deployment URL: `https://between-k824ot1ys-smile-plzzs-projects.vercel.app`.
 
 The user initially imported the repository into Vercel. The page built but `/api/space` and anonymous logout returned 500: Production lacked `BETWEENUS_BACKEND` and `APP_ORIGIN`. Browser-based Vercel CLI login restored access independently of the failing ChatGPT Vercel plugin. The existing project was verified before linking; no duplicate application or paid upgrade was created.
 
@@ -40,10 +40,28 @@ After rebuilding with the corrected variables:
 
 Vercel CLI authentication files, project links, and pulled environment files remain outside Git; `.vercel` is explicitly ignored. The plugin's original 403/unknown-action issue is not claimed fixed. CLI access provides the working management boundary for this cloud workspace. Vercel Hobby is for personal/noncommercial use; reconsider the plan before a commercial launch.
 
+## Live provider/browser verification — 2026-10-06
+
+The activity refinement above was verified on the stable production alias using three temporary synthetic identities and genuine Supabase password-login sessions. Fixtures were administratively seeded as email-confirmed; no messages were sent, confirmation requirements were not disabled, and no service-role credential was added to the application. This verifies login/session behavior, **not signup email delivery or confirmation callbacks**.
+
+The browser checks passed:
+
+- A creates a space and invites B; B joins from a separate mobile browser session.
+- Three starter ideas appear without preloading shared history. A explicitly saves one; attribution remains A and it synchronizes to B.
+- B independently reacts; A sees the attributable reaction.
+- A creates a Question Card; B chooses Not now, preserving a legitimate voluntary response.
+- Unpaired C cannot request catalogs (403). After C creates a separate space, guessing A's object detail ID returns 404.
+- Decide Together returns exactly three live TVMaze documentary suggestions and three Open Library reading suggestions; food returns three curated starters. A saves a catalog suggestion through the existing capture boundary.
+- The mobile page has no horizontal overflow; all three browser sessions report no page JavaScript errors and logout succeeds.
+
+All fixture spaces, objects, questions, reactions/responses, events, invitations, memberships, profiles and Auth identities were deleted afterward. Scoped verification returned zero remaining Auth/profile/membership fixtures; the ignored local password file was removed. No real member records were altered. Screenshots contain synthetic content only and remain outside Git.
+
+Final local checks for this application revision: lint, type checking, **30 tests across four files**, **two browser journeys**, and production build passed. The discovery request boundary, bounded provider parsing, deterministic fallbacks, and save independence have automated coverage; see [discovery architecture](discovery-starters.md).
+
 ## Remaining hosted validation
 
 1. Review Supabase Auth's site URL (`https://between-us-three-beta.vercel.app`) and exact redirect allowlist (`https://between-us-three-beta.vercel.app/auth/callback`). Keep confirmation enabled, configure SMTP, minimum password length 12, and provider rate/session settings. The available Supabase MCP tools do not expose Auth configuration; the owner must configure it in the dashboard or provide a securely connected management boundary. **Email delivery and callback correctness have not been verified.**
-2. Test A/B/C through real provider sessions: signup/confirmation, pairing, capture, polling sync, reactions, questions, retrieval, decisions, guessed-ID denial, and discreet rendering. Hosted database role tests and local browser tests already pass; they do not substitute for this complete provider/browser test. Keep intimacy disabled.
+2. Complete self-service signup/confirmation/recovery and the sensitive-detail browser review with controlled pilot accounts. Real provider login, pairing, capture, sync, reactions, a question response, catalog decisions and guessed-ID denial passed above; sensitive policies also have hosted SQL/local browser coverage. Keep intimacy disabled until the lifecycle/privacy review is complete.
 3. Review/remove unused integration-provided credentials from this project's runtime when the provider integration permits it; the application reads only its documented Supabase URL/publishable key and origin/backend settings.
 4. Repeat the controlled-pilot lifecycle/recovery review before real sensitive use. The live signup screen does not constitute broad launch readiness.
 
