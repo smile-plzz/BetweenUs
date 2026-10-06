@@ -314,6 +314,24 @@ test("two real accounts pair, capture, react, answer voluntarily, decide, and pr
     await page.getByRole("button", { name: "Save my choices" }).click();
   }
   await expect.poll(async () => (await snapshot(a)).intimacy_active).toBe(true);
+  await b.getByRole("button", { name: "Our Space", exact: true }).click();
+  await b
+    .getByRole("button", { name: "Open an intimacy question privately" })
+    .click();
+  await expect(b.getByLabel("Your question")).not.toHaveValue("");
+  await a.getByRole("button", { name: "Privacy and settings" }).click();
+  await a.getByLabel("Intimacy & desire").uncheck();
+  await a.getByRole("button", { name: "Save my choices" }).click();
+  await expect(b.getByLabel("Your question")).not.toBeVisible({
+    timeout: 15000,
+  });
+  await expect(
+    b.getByRole("button", { name: "Open an intimacy question privately" }),
+  ).toHaveCount(0);
+  await a.getByRole("button", { name: "Privacy and settings" }).click();
+  await a.getByLabel("Intimacy & desire").check();
+  await a.getByRole("button", { name: "Save my choices" }).click();
+  await expect.poll(async () => (await snapshot(b)).intimacy_active).toBe(true);
   const intimate = await mutate(a, {
     action: "question",
     prompt: "A sensitive adult question fixture",
@@ -352,4 +370,81 @@ test("two real accounts pair, capture, react, answer voluntarily, decide, and pr
   await contextA.close();
   await contextB.close();
   await contextC.close();
+});
+
+test("the home stays filled, shares source-backed suggestions, and drafts questions without automatic posting", async ({
+  page,
+}) => {
+  const run = Date.now();
+  expect((await page.request.get("/api/home-suggestions")).status()).toBe(401);
+  // Simulate a catalog outage; article/video/activity starters must still work.
+  await page.route("**/api/home-suggestions", (route) =>
+    route.fulfill({
+      status: 503,
+      body: '{"error":"offline"}',
+      contentType: "application/json",
+    }),
+  );
+  await signUp(page, "Home pilot", `home-pilot-${run}@example.test`);
+  expect((await page.request.get("/api/home-suggestions")).status()).toBe(403);
+  await page.getByLabel("I understand and accept").check();
+  await page
+    .getByRole("button", { name: "Create our space", exact: true })
+    .last()
+    .click();
+  const home = page.getByRole("region", { name: "Ideas to make your own" });
+  await expect(home.locator("article")).toHaveCount(3);
+  expect((await snapshot(page)).objects).toHaveLength(0);
+  const media = home.getByRole("article", { name: "Watch or read suggestion" });
+  const source = await media
+    .locator(".idea-source a")
+    .first()
+    .getAttribute("href");
+  expect(source).toMatch(/^https:\/\/(www.ted.com|ggia.berkeley.edu)\//);
+  const oldTitle = await media.locator("h3").innerText();
+  await media.getByRole("button", { name: /Something else/ }).click();
+  await expect(media.locator("h3")).not.toHaveText(oldTitle);
+  const title = await media.locator("h3").innerText();
+  await media.getByRole("button", { name: "Suggest to my partner" }).click();
+  await expect.poll(async () => (await snapshot(page)).objects.length).toBe(1);
+  const saved = (await snapshot(page)).objects[0];
+  expect(saved.title).toBe(title);
+  expect(saved.created_by).toBe((await snapshot(page)).user.id);
+  expect(saved.body).toContain("suggest to you");
+  expect(saved.source_url).toMatch(
+    /^https:\/\/(www.ted.com|ggia.berkeley.edu)\//,
+  );
+  await expect(home.locator("article")).toHaveCount(3);
+  const connect = home.getByRole("article", {
+    name: "Connect together suggestion",
+  });
+  const prompt = await connect.locator("h3").innerText();
+  await connect.getByRole("button", { name: "Make a Question Card" }).click();
+  await expect(page.getByLabel("Your question")).toHaveValue(prompt);
+  expect((await snapshot(page)).questions).toHaveLength(0);
+  await page
+    .getByLabel("Your question")
+    .fill("Which little possibility feels good to you?");
+  await page.getByRole("button", { name: "Place the question" }).click();
+  await expect
+    .poll(async () => (await snapshot(page)).questions.length)
+    .toBe(1);
+  await expect(
+    home.getByRole("button", { name: "Open an intimacy question privately" }),
+  ).toHaveCount(0);
+  await page.unroute("**/api/home-suggestions");
+  expect(
+    (await page.request.get("/api/home-suggestions?actor_id=spoof")).status(),
+  ).toBe(400);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await home.scrollIntoViewIfNeeded();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: "test-results/mobile-three-possibilities.png",
+    fullPage: true,
+  });
 });

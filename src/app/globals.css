@@ -2348,3 +2348,58 @@ summary {
     min-height: 36px;
   }
 }
+
+.home-suggestions {
+  margin: 0 0 48px;
+}
+.suggestion-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #647254;
+  margin-bottom: 22px;
+}
+.home-possibility.media {
+  background: #f3eee6;
+}
+.home-possibility.connect {
+  background: #eeedf2;
+}
+.home-possibility h3 {
+  font-size: 26px;
+}
+.home-possibility .suggestion-reason {
+  font-size: 11px;
+  line-height: 1.6;
+  border-top: 1px solid #dddcd2;
+  padding-top: 14px;
+}
+.suggestion-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.suggestion-actions .text-button,
+.private-suggestion {
+  justify-content: center;
+  min-height: 44px;
+  font-size: 12px;
+}
+.suggestion-swap {
+  align-self: center;
+  font-size: 12px;
+  min-height: 44px;
+  margin-top: 12px;
+}
+.suggestion-cadence {
+  color: #707865;
+  font-size: 11px;
+}
+@media (max-width: 850px) {
+  .home-suggestions .section-heading {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}

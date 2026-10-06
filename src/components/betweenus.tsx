@@ -46,6 +46,8 @@ import {
 } from "./cards";
 import { useSpace } from "./use-space";
 import { Ideas } from "./ideas";
+import { HomeSuggestions } from "./home-suggestions";
+import { homeSuggestions, type QuestionDraft } from "@/domain/home-suggestions";
 import type { IdeaIntent } from "@/domain/ideas";
 type View = "home" | "things" | "questions" | "decide";
 type Detail =
@@ -69,11 +71,15 @@ export function BetweenUs() {
     [localError, setLocalError] = useState(""),
     [inviteToken, setInviteToken] = useState(""),
     [decisionIntent, setDecisionIntent] = useState<IdeaIntent>("watch");
+  const [questionDraft, setQuestionDraft] = useState<
+    QuestionDraft | undefined
+  >();
   const detailRequest = useRef(0);
   const dismiss = useCallback(() => {
     detailRequest.current++;
     setDetail(null);
     setModal(null);
+    setQuestionDraft(undefined);
     setOpening(false);
   }, []);
   useEffect(() => {
@@ -214,7 +220,14 @@ export function BetweenUs() {
         {toastNode}
       </main>
     );
-  const closeModal = () => setModal(null);
+  const closeModal = () => {
+    setModal(null);
+    setQuestionDraft(undefined);
+  };
+  const questionAllowed =
+    !questionDraft ||
+    questionDraft.domain !== "intimacy" ||
+    data.intimacy_active;
   const visibleDetail =
     detail &&
     data.space &&
@@ -314,7 +327,14 @@ export function BetweenUs() {
                   busy={busy}
                   open={open}
                   onCapture={() => setModal("capture")}
-                  onQuestion={() => setModal("question")}
+                  onQuestion={() => {
+                    setQuestionDraft(undefined);
+                    setModal("question");
+                  }}
+                  onSuggestedQuestion={(draft) => {
+                    setQuestionDraft(draft);
+                    setModal("question");
+                  }}
                   navigate={setView}
                   decide={(intent) => {
                     setDecisionIntent(intent);
@@ -335,7 +355,10 @@ export function BetweenUs() {
                 <Questions
                   data={data}
                   open={open}
-                  onQuestion={() => setModal("question")}
+                  onQuestion={() => {
+                    setQuestionDraft(undefined);
+                    setModal("question");
+                  }}
                 />
               )}
               {view === "decide" && (
@@ -366,7 +389,7 @@ export function BetweenUs() {
           <span>Save something</span>
         </button>
       )}
-      {modal && data.space && (
+      {modal && data.space && (modal !== "question" || questionAllowed) && (
         <Modal
           title={
             modal === "capture"
@@ -386,6 +409,7 @@ export function BetweenUs() {
             />
           ) : modal === "question" ? (
             <QuestionForm
+              initial={questionDraft}
               data={data}
               act={act}
               busy={busy}
@@ -447,6 +471,7 @@ function HomeView({
   open,
   onCapture,
   onQuestion,
+  onSuggestedQuestion,
   navigate,
   decide,
 }: {
@@ -456,18 +481,28 @@ function HomeView({
   open: (type: "object" | "question", id: string) => void;
   onCapture: () => void;
   onQuestion: () => void;
+  onSuggestedQuestion: (draft: QuestionDraft) => void;
   navigate: (view: View) => void;
   decide: (intent: IdeaIntent) => void;
 }) {
+  const suggestions = homeSuggestions(data);
+  const featuredIds = new Set([
+    suggestions.activities[0]?.objectId,
+    suggestions.media[0]?.objectId,
+  ]);
   const recent = data.objects
-    .filter((o) => o.status !== "archived")
+    .filter((o) => o.status !== "archived" && !featuredIds.has(o.id))
     .slice(0, 3);
   const candidate = recommend(
     data.objects,
     data.user.id,
     undefined,
     Date.parse(data.server_time),
-  ).find((c) => !recent.some((o) => o.id === c.object.id));
+  ).find(
+    (c) =>
+      !featuredIds.has(c.object.id) &&
+      !recent.some((o) => o.id === c.object.id),
+  );
   // A card is a voluntary object, not debt: answered/passed/not-now cards fade from Home.
   const question = data.questions.find(
     (q) =>
@@ -498,18 +533,27 @@ function HomeView({
         </div>
         <HomeSketch />
       </section>
-      <section className="home-section">
-        <div className="section-heading">
-          <div>
-            <span className="eyebrow">LITTLE POSSIBILITIES</span>
-            <h2>Recently left here</h2>
+      <HomeSuggestions
+        key={data.space?.id}
+        data={data}
+        act={act}
+        busy={busy}
+        open={open}
+        onQuestion={onSuggestedQuestion}
+        onCapture={onCapture}
+      />
+      {recent.length > 0 && (
+        <section className="home-section">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">LITTLE POSSIBILITIES</span>
+              <h2>Recently left here</h2>
+            </div>
+            <button className="text-button" onClick={() => navigate("things")}>
+              All our things
+              <ArrowRight size={16} />
+            </button>
           </div>
-          <button className="text-button" onClick={() => navigate("things")}>
-            All our things
-            <ArrowRight size={16} />
-          </button>
-        </div>
-        {recent.length ? (
           <div className="object-grid">
             {recent.map((object) => (
               <ObjectCard
@@ -522,22 +566,8 @@ function HomeView({
               />
             ))}
           </div>
-        ) : (
-          <Empty
-            title="Our first “we should.”"
-            action={
-              <button className="secondary" onClick={onCapture}>
-                Save our first thing
-                <Plus size={17} />
-              </button>
-            }
-          >
-            A restaurant, a film, a thought from your day. Leave something real
-            for your partner to discover.
-          </Empty>
-        )}
-      </section>
-      {!recent.length && <Ideas data={data} act={act} busy={busy} />}
+        </section>
+      )}
       <section className="expression-section">
         <div className="section-heading">
           <div>

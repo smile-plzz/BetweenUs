@@ -509,6 +509,7 @@ export function CaptureForm({
   );
 }
 export function QuestionForm({
+  initial,
   data,
   act,
   busy,
@@ -518,11 +519,26 @@ export function QuestionForm({
   act: Act;
   busy: boolean;
   onDone: () => void;
+  initial?: (typeof prompts)[number];
 }) {
-  const [domain, setDomain] = useState<Domain>("everyday"),
-    [sensitivity, setSensitivity] = useState<Sensitivity>("ordinary"),
-    [prompt, setPrompt] = useState(""),
-    [source, setSource] = useState<"custom" | "curated">("custom");
+  const [domain, setDomain] = useState<Domain>(initial?.domain ?? "everyday"),
+    [sensitivity, setSensitivity] = useState<Sensitivity>(
+      initial?.sensitivity ?? "ordinary",
+    ),
+    [prompt, setPrompt] = useState(initial?.prompt ?? ""),
+    [source, setSource] = useState<"custom" | "curated">(
+      initial ? "curated" : "custom",
+    );
+  if (
+    (sensitivity === "explicit-intimate" || domain === "intimacy") &&
+    !data.intimacy_active
+  )
+    return (
+      <p className="notice" role="status">
+        This private question is unavailable because intimacy participation is
+        off.
+      </p>
+    );
   const availablePrompts = prompts.filter(
     (p) =>
       (p.domain !== "intimacy" || data.intimacy_active) &&

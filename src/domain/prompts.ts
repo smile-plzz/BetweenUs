@@ -15,6 +15,21 @@ export const prompts: {
     sensitivity: "ordinary",
   },
   {
+    prompt: "What is one small adventure you would like us to try?",
+    domain: "playful",
+    sensitivity: "ordinary",
+  },
+  {
+    prompt: "Which song would you put on for us tonight?",
+    domain: "everyday",
+    sensitivity: "ordinary",
+  },
+  {
+    prompt: "If we cooked something together, what would you pick?",
+    domain: "everyday",
+    sensitivity: "ordinary",
+  },
+  {
     prompt: "What is a small thing we do that you hope we keep doing?",
     domain: "relationship",
     sensitivity: "private-couple",

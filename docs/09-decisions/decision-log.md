@@ -104,3 +104,9 @@ This log captures decisions already made in product discovery so future work doe
 
 ## D031 — Useful empty homes and finite public discovery
 **Decision:** Following the owner's request for activity-filled empty states and dynamic free data, show three daily ordinary starter ideas and offer explicit, finite catalog exploration when saved history is insufficient or the pair asks for something new. TVMaze/Open Library adapters accept only fixed public queries, with provenance, response/time budgets and curated fallbacks. Existing shared history stays first; nothing becomes shared until a verified member saves it through the existing capture primitive. No personal/sensitive content or couple identity goes to providers. Food ideas remain curated because a development-only API key is not a dependable hosted integration boundary.
+
+## D032 — Three useful home possibilities, with bounded ordinary catalogs
+
+**Decision:** At the owner's request, Our Space always leads with three interactive possibilities: Do together, Watch or read, and Connect together. Real ordinary saved history is prioritized; curated activities, source-linked articles/videos, and bounded existing public catalogs fill gaps. Local per-slot alternatives are finite. Saving/suggesting and placing a question require explicit actions and retain the actor; no fake shared history or automatic Question Cards are generated.
+
+**Why:** The owner found the mostly manual home too empty. A complete starting point provides immediate value while preserving the private-home model, voluntary expression, and explainable finite discovery. A generic ordinary catalog may load once on entering Home; no personal context leaves the app. Sensitive suggestions remain an explicit private action behind the existing mutual gate. This is a scoped, authorized extension, not an infinite engagement feed or general messaging system. See `docs/06-engineering/discovery-starters.md`.

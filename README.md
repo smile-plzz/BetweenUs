@@ -42,6 +42,8 @@ npm run db:reset -- --confirm
 
 This command uses the default `.local/betweenus` unless `LOCAL_DATABASE_PATH` is supplied in the shell. It does not load `.env.local`. Never reset a database containing real pilot data.
 
+Our Space now opens with three ready-to-use possibilities: **Do together**, **Watch or read**, and **Connect together**. Saved history leads; source-linked articles/videos and ordinary public catalogs fill gaps. Choose **Something else**, save/suggest a possibility, or edit a Question Card before posting. No API key is needed, and `BETWEENUS_DISCOVERY=curated` disables outbound catalog calls.
+
 ### Supabase / hosted pilot
 
 1. Create a **dedicated** Supabase project. Apply `supabase/migrations/20261005075912_betweenus_foundation.sql` using the SQL editor, or `npx supabase link --project-ref YOUR_PROJECT_REF` followed by `npx supabase db push`. The mirror `db/schema.sql` is for local testing; do not apply both copies. `db/local-bootstrap.sql` is local-only and must never be applied to Supabase.

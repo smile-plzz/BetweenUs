@@ -6,7 +6,12 @@ export interface Idea {
   title: string;
   body: string;
   intent: IdeaIntent;
-  source: "BetweenUs starters" | "TVMaze" | "Open Library";
+  source:
+    | "BetweenUs starters"
+    | "TVMaze"
+    | "Open Library"
+    | "TED"
+    | "Greater Good in Action";
   source_url: string;
 }
 export interface IdeaSet {
@@ -128,7 +133,9 @@ export function starterIdeas(
   });
 }
 
-export function ideaCapture(idea: Idea): Mutation {
+export function ideaCapture(
+  idea: Idea,
+): Extract<Mutation, { action: "capture" }> {
   return {
     action: "capture",
     title: idea.title,
