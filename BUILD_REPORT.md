@@ -5,7 +5,7 @@
 - Repository: `smile-plzz/BetweenUs`
 - Delivery branch: **main**
 - Original V1 application commit: **`aff503f318a7ea63034885f7473255fa02d7c6a0`**
-- Latest tested application/engineering commit: **`738188d890eec53194bfbcd4d98892f646b617b3`**
+- Latest tested application/engineering commit: **`a45db26e0ddd7b6e9920430082da08219ed9ee35`**
 - Foundation checkpoint: `4c31c908f5508f2fbe87e97fb040b4ec7103aac4`
 - This report is a subsequent documentation-only commit. The exact delivery tip, including this report, is available with `git rev-parse origin/main` after fetching. Recording a report's own immutable Git SHA inside itself is circular; the application SHA above identifies the exact tested code.
 
@@ -29,9 +29,9 @@ A runnable, mobile-first private shared home. The source documents and canonical
 
 ## Architecture
 
-**Activity/discovery refinement:** Empty homes/collections now offer three daily starter activities, and Decide Together has optional finite public catalog exploration through TVMaze and Open Library. Selection reuses attributable shared capture; no fake couple history is seeded. Providers receive only fixed ordinary catalog queries, with bounded/validated responses and curated fallbacks. The operator can disable external requests with `BETWEENUS_DISCOVERY=curated`. See [discovery/starter architecture](docs/06-engineering/discovery-starters.md). The expanded suite has **30 passing tests and two passing browser journeys**; lint, type checking and production build pass. The live production browser also passed genuine provider sessions, shared capture/sync and finite catalog responses. All temporary identities/data were removed afterward. The build includes authenticated `/api/ideas`; [hosted verification](docs/06-engineering/hosted-deployment-status.md) records the details and remaining email-signup limitation.
+**Initial activity/discovery refinement:** Empty homes/collections offered three daily starter activities, and Decide Together has optional finite public catalog exploration through TVMaze and Open Library. Selection reuses attributable shared capture; no fake couple history is seeded. Providers receive only fixed ordinary catalog queries, with bounded/validated responses and curated fallbacks. The operator can disable external requests with `BETWEENUS_DISCOVERY=curated`. See [discovery/starter architecture](docs/06-engineering/discovery-starters.md). The expanded suite has **30 passing tests and two passing browser journeys**; lint, type checking and production build pass. The live production browser also passed genuine provider sessions, shared capture/sync and finite catalog responses. All temporary identities/data were removed afterward. The build includes authenticated `/api/ideas`; [hosted verification](docs/06-engineering/hosted-deployment-status.md) records the details and remaining email-signup limitation.
 
-**Three-card home extension:** Our Space now stays useful with Do together, Watch or read, and Connect together. Real saved history leads; four checked editorial article/video links, activity starters, and bounded ordinary catalogs fill gaps. Suggest/save keeps attribution, question suggestions remain editable drafts, and intimacy drafts disappear on opt-out. No schema or required credential changed. Expanded verification covers **34 unit/database tests and three browser journeys**, including outage behavior and intimate draft withdrawal. See the discovery architecture above. The exact current delivery tip is `git rev-parse origin/main`; the prior immutable application SHA records the preceding refinement.
+**Three-card home extension:** Our Space now stays useful with Do together, Watch or read, and Connect together. Real saved history leads; four checked editorial article/video links, activity starters, and bounded ordinary catalogs fill gaps. Suggest/save keeps attribution, question suggestions remain editable drafts, and intimacy drafts disappear on opt-out. No schema or required credential changed. Expanded verification covers **34 unit/database tests and three browser journeys**, including outage behavior and intimate draft withdrawal. See the discovery architecture above. The exact tested application SHA is recorded above; the current delivery tip including verification documentation is `git rev-parse origin/main`. The live home passed real A/B provider sessions, source-backed suggestion persistence/sync/reaction, draft-before-post, six bounded catalog options, mutual intimacy gating and live intimate-draft withdrawal. All synthetic identities and shared data were removed afterward.
 
 One root Next.js 16.3.8 / React 19.3 / TypeScript application, Zod validation, CSS responsive design, and Lucide icons. Exact package versions and the npm lockfile are committed; Node 24 LTS is recommended.
 
@@ -67,8 +67,8 @@ The final application revision was fetched/pulled, re-read, and verified locally
 | --- | --- |
 | `npm run lint` | Passed, no errors/warnings |
 | `npm run typecheck` | Passed |
-| `npm test` | **23 passed**, two files; actual PostgreSQL policy/constraint tests plus domain/privacy/ranking/migration checks |
-| `npm run test:e2e` | **Passed**; isolated server, desktop Partner A, mobile Partner B, unrelated signed-in C in a separate CoupleSpace |
+| `npm test` | **34 passed**, five files; actual PostgreSQL policy/constraint tests plus domain/privacy/ranking/migration checks |
+| `npm run test:e2e` | **3 passed**; isolated server, desktop Partner A, mobile Partner B, unrelated signed-in C in a separate CoupleSpace |
 | `npm run build` | Passed; final build had no compilation/tracing warnings |
 | Production `next start` browser smoke | Passed: signup, space creation, capture, authenticated persisted retrieval, logout |
 | Browser inspection | Auth/home render, no runtime errors or framework overlay, mobile page width fits viewport |

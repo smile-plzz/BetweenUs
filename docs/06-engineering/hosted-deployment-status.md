@@ -21,9 +21,9 @@ Performance advisors identified eight unindexed foreign keys and eleven per-row 
 - Live URL: **https://between-us-three-beta.vercel.app/**.
 - Owner workspace: `smile-plzzs-projects`, ID `team_aR7JG2YPPjTCdZIHu8PHKB2R`, Hobby.
 - Existing project: `between-us`, ID `prj_8a0OQFmtjznAo3NbFY5udjhggDRs`.
-- Verified application source: `smile-plzz/BetweenUs`, branch `main`, commit **`738188d890eec53194bfbcd4d98892f646b617b3`**.
-- Verified production deployment: **`dpl_5aagMPNYHa5HWA1dMcRbgTGghDhY`**, status READY; build duration 29 seconds.
-- Immutable deployment URL: `https://between-k824ot1ys-smile-plzzs-projects.vercel.app`.
+- Verified application source: `smile-plzz/BetweenUs`, branch `main`, commit **`a45db26e0ddd7b6e9920430082da08219ed9ee35`**.
+- Verified production deployment: **`dpl_7DWP5sL9yxgUMwbG6qr3cjdUeXnc`**, status READY; build duration 26 seconds.
+- Immutable deployment URL: `https://between-g35vl9lbg-smile-plzzs-projects.vercel.app`.
 
 The user initially imported the repository into Vercel. The page built but `/api/space` and anonymous logout returned 500: Production lacked `BETWEENUS_BACKEND` and `APP_ORIGIN`. Browser-based Vercel CLI login restored access independently of the failing ChatGPT Vercel plugin. The existing project was verified before linking; no duplicate application or paid upgrade was created.
 
@@ -74,3 +74,11 @@ After reporting successful account creation and local product testing, the owner
 A rollback-only hosted PostgreSQL check verified availability, denial with only one opted-in partner, successful question/answer creation after both opt in, generic previews excluding synthetic intimate text, outsider detail denial, and immediate database access denial after either participant opts out. The check rolled back all synthetic identities and content. The existing automated intimacy opt-in/revocation test was rerun successfully.
 
 Participants must each enable their own checkbox in Privacy and settings and save. Closing/reopening settings or refreshing retrieves availability. Installation enablement does not select anyone's checkbox, establish current sexual consent, or change the documented controlled-pilot lifecycle/recovery limitations. Operators can revoke installation availability with `update private.features set intimacy_pilot = false where singleton;`.
+
+## Three-possibility home verification — 2026-10-07 (Asia/Dhaka)
+
+Application revision `a45db26e0ddd7b6e9920430082da08219ed9ee35` is live on the stable alias. Lint, type checking, **34 tests across five files**, **three browser journeys**, and production build pass. Four editorial article/video pages returned 200 and their publisher titles were checked. The runtime error-log query for the short verification window returned no entries.
+
+Two temporary email-confirmed synthetic identities signed in through genuine provider sessions. Live browser verification passed all three filled Home slots without seeded history; pairing; an explicit source-linked suggestion with A's attribution; sync to B and B's independent reaction; editable question draft without automatic posting; final question submission; anonymous/unpaired catalog denial; actor-query rejection; a bounded response with six real catalog choices; mobile layout/no JavaScript errors; independent mutual intimacy opt-ins; and removal of B's open intimate draft after A withdrew participation. Both sessions logged out. These checks do not test signup email delivery.
+
+All synthetic spaces, shared content, events, invitations, memberships, profiles and Auth identities were removed in a transaction restricted to the exact fixture IDs, with an assertion against unrelated membership. Post-cleanup Auth/profile/membership counts are zero. The ignored owner-only credential file was deleted. Actual member choices/data were untouched; the owner-enabled installation intimacy flag remains true. This update needs no new schema, secrets, paid service, or operator/member opt-in change. See [discovery architecture](discovery-starters.md) for the bounded automatic ordinary-catalog request and fallback behavior.
