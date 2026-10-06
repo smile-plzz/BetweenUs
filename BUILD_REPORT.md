@@ -88,6 +88,8 @@ Screenshots/traces contain synthetic development fixtures only and remain ignore
 
 ## Environment and deployment
 
+**Hosted setup follow-up:** A dedicated free Supabase project (`vrvolqziqlzpwnncxysf`, Mumbai) now has the foundation migration and passing hosted PostgreSQL role/RLS smoke checks. Intimacy remains disabled. Vercel returned a workspace-scope authorization error, so no live application deployment exists yet. Hosted Auth/email/browser checks remain pending. See [hosted deployment status](docs/06-engineering/hosted-deployment-status.md) for advisor results and the exact resume checklist. The original delivery results above describe the original application revision; this follow-up adds a repeatable rollback-only SQL check and its automated no-residue test.
+
 The fastest local run needs no third-party credentials:
 
 ```bash
@@ -109,7 +111,7 @@ Use two browser profiles, create actual accounts, pair, and start with real ordi
 
 For a hosted pilot, apply the migration once to a dedicated Supabase project, configure verified-email Auth/SMTP, password length/rate limits, site URL and `/auth/callback` allowlist, and repeat provider-level authorization checks/advisors. Supabase's `private.features` is the hosted intimacy flag and defaults off. Import the root into Vercel as Next.js, set the hosted environment, and build with `npm run build`. Keep preview/test/pilot databases separate. Full steps are in README and the architecture/pilot documents.
 
-No Supabase project credentials or deployment identity were available. A real hosted project, SMTP confirmation/recovery, Supabase advisors, optional full local Supabase Docker stack, and Vercel deployment were **prepared but not exercised**. Local success is not presented as a hosted-security/deployment guarantee.
+During the original V1 build, no Supabase project credentials or deployment identity were available. A real hosted project, SMTP confirmation/recovery, Supabase advisors, optional full local Supabase Docker stack, and Vercel deployment were **prepared but not exercised in that run**. The hosted follow-up above records subsequent Supabase provisioning/advisors/role checks; actual Auth/email/browser deployment checks remain pending. Local success is not presented as a hosted-security/deployment guarantee.
 
 ## Known limitations and deliberate deferrals
 

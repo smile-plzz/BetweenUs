@@ -14,6 +14,8 @@ BetweenUs gives them somewhere to live **between the moment they are expressed a
 
 The runnable implementation is at the repository root. Product specifications below remain the source of truth. Implementation details: [V1 architecture](docs/06-engineering/v1-architecture.md), [pilot operations](docs/06-engineering/pilot-operations.md), and [build report](BUILD_REPORT.md).
 
+Hosted setup progress and the exact resume checklist are recorded in [hosted deployment status](docs/06-engineering/hosted-deployment-status.md). The dedicated free Supabase project is prepared; Vercel workspace access must be reconnected before a live URL can be created.
+
 ### Local development — no external credentials
 
 Use Node 24 LTS (`nvm use`) and npm:
