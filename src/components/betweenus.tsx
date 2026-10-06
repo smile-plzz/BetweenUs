@@ -45,6 +45,8 @@ import {
   QuestionDetail,
 } from "./cards";
 import { useSpace } from "./use-space";
+import { Ideas } from "./ideas";
+import type { IdeaIntent } from "@/domain/ideas";
 type View = "home" | "things" | "questions" | "decide";
 type Detail =
   | { type: "object"; item: SharedObject }
@@ -66,7 +68,7 @@ export function BetweenUs() {
     [opening, setOpening] = useState(false),
     [localError, setLocalError] = useState(""),
     [inviteToken, setInviteToken] = useState(""),
-    [decisionIntent, setDecisionIntent] = useState<Category>("watch");
+    [decisionIntent, setDecisionIntent] = useState<IdeaIntent>("watch");
   const detailRequest = useRef(0);
   const dismiss = useCallback(() => {
     detailRequest.current++;
@@ -455,7 +457,7 @@ function HomeView({
   onCapture: () => void;
   onQuestion: () => void;
   navigate: (view: View) => void;
-  decide: (intent: Category) => void;
+  decide: (intent: IdeaIntent) => void;
 }) {
   const recent = data.objects
     .filter((o) => o.status !== "archived")
@@ -535,6 +537,7 @@ function HomeView({
           </Empty>
         )}
       </section>
+      {!recent.length && <Ideas data={data} act={act} busy={busy} />}
       <section className="expression-section">
         <div className="section-heading">
           <div>
@@ -584,7 +587,7 @@ function HomeView({
           <p>Start with what’s already here.</p>
         </div>
         <div className="intent-shortcuts">
-          {(["watch", "eat", "do"] as Category[]).map((c) => (
+          {(["watch", "eat", "do"] as IdeaIntent[]).map((c) => (
             <button key={c} onClick={() => decide(c)}>
               <CategoryIcon category={c} />
               <span>
@@ -742,6 +745,7 @@ function Things({
             : "Start with one real thing you’d like to remember together."}
         </Empty>
       )}
+      {!data.objects.length && <Ideas data={data} act={act} busy={busy} />}
     </>
   );
 }
@@ -823,14 +827,15 @@ function Decide({
   initialIntent,
 }: {
   data: Snapshot;
-  initialIntent: Category;
+  initialIntent: IdeaIntent;
   act: ReturnType<typeof useSpace>["act"];
   busy: boolean;
   open: (type: "object" | "question", id: string) => void;
   onCapture: () => void;
 }) {
-  const [intent, setIntent] = useState<Category>(initialIntent),
-    [chosen, setChosen] = useState("");
+  const [intent, setIntent] = useState<IdeaIntent>(initialIntent),
+    [chosen, setChosen] = useState(""),
+    [exploring, setExploring] = useState(false);
   const candidates = recommend(
     data.objects,
     data.user.id,
@@ -845,13 +850,14 @@ function Decide({
         <p>A few possibilities from the things you’ve actually shared.</p>
       </div>
       <div className="decision-intents">
-        {(["watch", "eat", "do"] as Category[]).map((c) => (
+        {(["watch", "eat", "do"] as IdeaIntent[]).map((c) => (
           <button
             key={c}
             aria-pressed={intent === c}
             onClick={() => {
               setIntent(c);
               setChosen("");
+              setExploring(false);
             }}
           >
             <CategoryIcon category={c} />
@@ -915,6 +921,14 @@ function Decide({
             Either person’s “Not for me” keeps an item out of these suggestions.
             No answer or reaction is assumed.
           </p>
+          <button
+            className="text-button"
+            onClick={() => setExploring(!exploring)}
+            aria-expanded={exploring}
+          >
+            {exploring ? "Stay with our saved ideas" : "Explore something new"}
+            <Sparkles size={16} />
+          </button>
         </>
       ) : (
         <Empty
@@ -937,9 +951,19 @@ function Decide({
             : intent === "eat"
               ? "food ideas"
               : "activities"}{" "}
-          here yet. Save one and choose its moment under the optional details.
-          We’ll start from your own history.
+          here yet. Choose a starter below, or save an idea of your own. As your
+          collection grows, we’ll start from your shared history.
         </Empty>
+      )}
+      {(!candidates.length || exploring) && (
+        <Ideas
+          key={intent}
+          data={data}
+          act={act}
+          busy={busy}
+          intent={intent}
+          fresh
+        />
       )}
     </>
   );

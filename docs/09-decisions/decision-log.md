@@ -101,3 +101,6 @@ This log captures decisions already made in product discovery so future work doe
 
 ## D030 — Local source preservation before provider enrichment
 **Decision:** V1 asynchronously records known URL hostname/provenance after saving. Conservative known-host categories are available without manual classification; arbitrary URL scraping/Open Graph/LLM processing is deferred. No third party receives shared content, and metadata/recommendations do not fabricate price, location, availability, or preferences.
+
+## D031 — Useful empty homes and finite public discovery
+**Decision:** Following the owner's request for activity-filled empty states and dynamic free data, show three daily ordinary starter ideas and offer explicit, finite catalog exploration when saved history is insufficient or the pair asks for something new. TVMaze/Open Library adapters accept only fixed public queries, with provenance, response/time budgets and curated fallbacks. Existing shared history stays first; nothing becomes shared until a verified member saves it through the existing capture primitive. No personal/sensitive content or couple identity goes to providers. Food ideas remain curated because a development-only API key is not a dependable hosted integration boundary.

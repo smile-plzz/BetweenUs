@@ -2222,6 +2222,115 @@ summary {
 }
 
 /* Keep quiet metadata legible and one-tap reactions comfortable on a phone. */
+.ideas-section {
+  margin: 30px 0 38px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line, #e3ded4);
+}
+.ideas-intro,
+.ideas-notice {
+  color: #707865;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.ideas-intro {
+  max-width: 580px;
+  margin: 10px 0 22px;
+}
+.ideas-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+.ideas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.idea-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #fffefa;
+  border: 1px solid #e4dfd3;
+  border-radius: 20px;
+  padding: 22px;
+  min-width: 0;
+}
+.idea-symbol {
+  display: inline-flex;
+  padding: 12px;
+  border-radius: 50%;
+  background: #edf0e6;
+  color: #6b7e59;
+  margin-bottom: 18px;
+}
+.idea-card:nth-child(2) .idea-symbol {
+  background: #f4e8dd;
+  color: #aa7557;
+}
+.idea-card:nth-child(3) .idea-symbol {
+  background: #e9e8f0;
+  color: #89809d;
+}
+.idea-card h3 {
+  font-size: 25px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
+.idea-card > p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #747969;
+  margin: 0 0 22px;
+}
+.idea-source {
+  margin-top: auto;
+  margin-bottom: 15px;
+  font-size: 11px;
+  color: #737967;
+}
+.idea-source a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #697d54;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.idea-source .idea-license {
+  margin-left: 8px;
+}
+.idea-card .secondary {
+  width: 100%;
+  justify-content: center;
+  font-size: 12px;
+  min-height: 44px;
+}
+@media (max-width: 850px) {
+  .ideas-grid {
+    grid-template-columns: 1fr;
+  }
+  .idea-card {
+    padding: 21px;
+  }
+  .idea-symbol {
+    padding: 9px;
+    margin-bottom: 14px;
+  }
+  .idea-card h3 {
+    font-size: 25px;
+  }
+  .idea-card > p {
+    font-size: 13px;
+  }
+  .ideas-section .section-heading {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+}
 .card-byline,
 .kind-label,
 .question-footer,

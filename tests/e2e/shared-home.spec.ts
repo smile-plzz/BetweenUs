@@ -21,6 +21,121 @@ async function mutate(page: Page, body: Record<string, unknown>) {
     headers: { Origin: new URL(page.url()).origin },
   });
 }
+test("an empty pair can choose a starter, preserve authorship, and safely explore fresh ideas", async ({
+  browser,
+}) => {
+  const contextA = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+  });
+  const contextB = await browser.newContext();
+  const a = await contextA.newPage(),
+    b = await contextB.newPage();
+  const run = Date.now();
+  expect((await a.request.get("/api/ideas?intent=do")).status()).toBe(401);
+  await signUp(a, "Starter A", `starter-a-${run}@example.test`);
+  expect((await a.request.get("/api/ideas?intent=eat")).status()).toBe(403);
+  await a.getByLabel("I understand and accept").check();
+  await a
+    .getByRole("button", { name: "Create our space", exact: true })
+    .last()
+    .click();
+  const region = a.getByRole("region", { name: "Ideas to make your own" });
+  await expect(region.locator("article")).toHaveCount(3);
+  expect((await snapshot(a)).objects).toHaveLength(0);
+  const title = await region.locator("article h3").first().innerText();
+  await a.getByRole("button", { name: "Invite my partner" }).click();
+  const token = await a.getByLabel("Invitation code").inputValue();
+  await signUp(b, "Starter B", `starter-b-${run}@example.test`);
+  await b.getByRole("button", { name: "Join my partner", exact: true }).click();
+  await b.getByLabel("Invitation code").fill(token);
+  await b.getByLabel("I understand and accept").check();
+  await b.getByRole("button", { name: "Accept invitation" }).click();
+  await expect(
+    b.getByRole("heading", { name: "A little of us," }),
+  ).toBeVisible();
+  await region.getByRole("button", { name: "Save this idea" }).first().click();
+  await expect(
+    b.getByRole("heading", { name: title, exact: true }),
+  ).toBeVisible({ timeout: 15000 });
+  const s = await snapshot(a);
+  expect(s.objects).toHaveLength(1);
+  expect(s.objects[0]).toMatchObject({
+    created_by: s.user.id,
+    kind: "idea",
+    category: "do",
+    sensitivity: "ordinary",
+  });
+  expect(s.objects[0].body).toContain("BetweenUs starters");
+  expect(
+    (await a.request.get("/api/ideas?intent=eat&user_id=spoof")).status(),
+  ).toBe(400);
+  expect((await a.request.get("/api/ideas?intent=intimacy")).status()).toBe(
+    400,
+  );
+  const food = await a.request.get("/api/ideas?intent=eat");
+  expect(food.ok()).toBe(true);
+  expect((await food.json()).ideas).toHaveLength(3);
+  await a.getByRole("button", { name: "Decide Together", exact: true }).click();
+  await a.route("**/api/ideas?intent=watch", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        origin: "public_catalog",
+        checked_at: new Date().toISOString(),
+        ideas: [
+          {
+            id: "tvmaze-768",
+            title: "Planet Earth",
+            body: "A documentary catalog fixture.",
+            intent: "watch",
+            source: "TVMaze",
+            source_url: "https://www.tvmaze.com/shows/768",
+          },
+        ],
+      }),
+    });
+  });
+  await a.getByRole("button", { name: "Find fresh ideas" }).click();
+  await expect(
+    a.getByRole("heading", { name: "Planet Earth", exact: true }),
+  ).toBeVisible();
+  expect((await snapshot(a)).objects).toHaveLength(1);
+  await a.getByRole("button", { name: "Save this idea" }).click();
+  await expect.poll(async () => (await snapshot(a)).objects.length).toBe(2);
+  expect(
+    (await snapshot(a)).objects.find(
+      (o: { title: string }) => o.title === "Planet Earth",
+    ),
+  ).toMatchObject({
+    created_by: s.user.id,
+    source_url: "https://www.tvmaze.com/shows/768",
+    category: "watch",
+  });
+  await a.getByRole("button", { name: "Do something", exact: true }).click();
+  await a.getByRole("button", { name: "Explore something new" }).click();
+  await a.route("**/api/ideas?intent=do", async (route) => {
+    await route.fulfill({ status: 502 });
+  });
+  await a.getByRole("button", { name: "Find fresh ideas" }).click();
+  await expect(
+    a.getByText(
+      "Fresh ideas couldn’t be reached. Your starter ideas are still here.",
+    ),
+  ).toBeVisible();
+  await expect(
+    a.getByRole("button", { name: "Save this idea" }).first(),
+  ).toBeEnabled();
+  expect(
+    await a.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+  ).toBe(true);
+  await a.screenshot({
+    path: "test-results/mobile-starter-ideas.png",
+    fullPage: true,
+  });
+  await contextA.close();
+  await contextB.close();
+});
 test("two real accounts pair, capture, react, answer voluntarily, decide, and protect discreet context", async ({
   browser,
 }) => {

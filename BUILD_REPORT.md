@@ -28,6 +28,8 @@ A runnable, mobile-first private shared home. The source documents and canonical
 
 ## Architecture
 
+**Activity/discovery refinement:** Empty homes/collections now offer three daily starter activities, and Decide Together has optional finite public catalog exploration through TVMaze and Open Library. Selection reuses attributable shared capture; no fake couple history is seeded. Providers receive only fixed ordinary catalog queries, with bounded/validated responses and curated fallbacks. The operator can disable external requests with `BETWEENUS_DISCOVERY=curated`. See [discovery/starter architecture](docs/06-engineering/discovery-starters.md). The expanded suite has **30 passing tests and two passing browser journeys**; the production build includes authenticated `/api/ideas`. Hosted verification for this refinement is recorded in the deployment status.
+
 One root Next.js 16.3.8 / React 19.3 / TypeScript application, Zod validation, CSS responsive design, and Lucide icons. Exact package versions and the npm lockfile are committed; Node 24 LTS is recommended.
 
 `src/domain` contains reusable types, validation, privacy rules, prompts, and deterministic intelligence. `src/server` contains session validation, local/Supabase adapters, authenticated RPC, same-origin checks, and sanitized errors. API routes separate auth, shared snapshot/mutations, and explicitly opened details. UI components compose the same primitives across domains.
@@ -121,7 +123,7 @@ During the original V1 build, no Supabase project credentials or deployment iden
 - Custom-content sensitivity is chosen by the contributor; there is no automated explicit-content detector. Discreet previews cannot prevent copying by an authorized recipient or protect a compromised device.
 - Snapshot retrieval currently suits pilot-size collections; server search/pagination and large-scale performance work are deferred.
 - Conservative host classification only. Other items need an optional contributor-selected moment before Watch/Eat/Do can use them. No price/location/time/availability facts are fabricated.
-- No external discovery, semantic/LLM search, Open Graph/image enrichment, or advanced preference inference.
+- No broad external discovery engine, semantic/LLM search, Open Graph/image enrichment, or advanced preference inference. The subsequent owner-requested refinement adds only three-choice starter/public-catalog exploration described above.
 - No rich explicit media, automatic sexual/worship completion records, full religious subsystem, prayer-time calculation, notification delivery, gestures/live presence, general chat, finance/bank links, continuous location, Wayfare merge, social feed, or premature services.
 
 ## Recommended next ten engineering tasks
