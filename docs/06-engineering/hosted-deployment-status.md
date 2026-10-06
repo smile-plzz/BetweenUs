@@ -7,7 +7,7 @@
 - Region: `ap-south-1` (Mumbai).
 - API URL: `https://vrvolqziqlzpwnncxysf.supabase.co`.
 - Project creation quote: **USD 0/month**. No paid upgrade requested.
-- Foundation migration applied successfully. All ten application tables have RLS enabled; the authoritative intimacy installation flag remains false.
+- Foundation migration applied successfully. All ten application tables have RLS enabled; the authoritative intimacy installation flag initially defaulted to false (see the owner-requested activation below).
 - `scripts/verify-hosted.sql` passed on hosted PostgreSQL using authenticated A/B/C and anonymous roles. It exercises pairing, capture, reactions, response transitions, private preview/detail policy, actor spoof denial, cross-space denial, anonymous RPC denial, disabled intimacy, and privileged maximum-two enforcement. It rolls back every synthetic identity and row.
 - The script does not verify actual Auth JWTs, email delivery, HTTP cookies, or the hosted browser journey. Those still require the deployed application.
 - Repository follow-up verification: lint, type checking, all **24 tests**, and production build passed. The added automated smoke test also verifies that no synthetic identities/spaces survive rollback. No application behavior changed in this follow-up.
@@ -61,8 +61,16 @@ Final local checks for this application revision: lint, type checking, **30 test
 ## Remaining hosted validation
 
 1. Review Supabase Auth's site URL (`https://between-us-three-beta.vercel.app`) and exact redirect allowlist (`https://between-us-three-beta.vercel.app/auth/callback`). Keep confirmation enabled, configure SMTP, minimum password length 12, and provider rate/session settings. The available Supabase MCP tools do not expose Auth configuration; the owner must configure it in the dashboard or provide a securely connected management boundary. **Email delivery and callback correctness have not been verified.**
-2. Complete self-service signup/confirmation/recovery and the sensitive-detail browser review with controlled pilot accounts. Real provider login, pairing, capture, sync, reactions, a question response, catalog decisions and guessed-ID denial passed above; sensitive policies also have hosted SQL/local browser coverage. Keep intimacy disabled until the lifecycle/privacy review is complete.
+2. Complete self-service signup/confirmation/recovery and the sensitive-detail browser review with controlled pilot accounts. Real provider login, pairing, capture, sync, reactions, a question response, catalog decisions and guessed-ID denial passed above; sensitive policies also have hosted SQL/local browser coverage. The owner explicitly enabled the controlled adult-text feature as recorded below; broader lifecycle/privacy review remains open before expanding beyond the controlled pilot.
 3. Review/remove unused integration-provided credentials from this project's runtime when the provider integration permits it; the application reads only its documented Supabase URL/publishable key and origin/backend settings.
 4. Repeat the controlled-pilot lifecycle/recovery review before real sensitive use. The live signup screen does not constitute broad launch readiness.
 
 The repository README contains the full setup and controlled-pilot boundaries. No credentials, tokens, or synthetic database contents belong in this document.
+
+## Owner-requested intimacy activation — 2026-10-07 (Asia/Dhaka)
+
+After reporting successful account creation and local product testing, the owner explicitly requested enabling **Intimacy & desire** on the hosted installation. The operator updated only `private.features.intimacy_pilot` to true in the existing dedicated project. No member opt-in, Auth requirement, RLS policy, permission, or code was changed. New installations still default to disabled. No redeployment is required: the authenticated snapshot reads the authoritative database flag.
+
+A rollback-only hosted PostgreSQL check verified availability, denial with only one opted-in partner, successful question/answer creation after both opt in, generic previews excluding synthetic intimate text, outsider detail denial, and immediate database access denial after either participant opts out. The check rolled back all synthetic identities and content. The existing automated intimacy opt-in/revocation test was rerun successfully.
+
+Participants must each enable their own checkbox in Privacy and settings and save. Closing/reopening settings or refreshing retrieves availability. Installation enablement does not select anyone's checkbox, establish current sexual consent, or change the documented controlled-pilot lifecycle/recovery limitations. Operators can revoke installation availability with `update private.features set intimacy_pilot = false where singleton;`.
