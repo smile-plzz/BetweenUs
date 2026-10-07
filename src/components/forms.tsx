@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowRight,
   Copy,
@@ -367,6 +367,25 @@ function SafetySelect({
     </label>
   );
 }
+// External permission withdrawal closes the form permanently. A synchronous
+// render guard hides its fields before the queued dismissal runs.
+function useIntimateDraftAccess(
+  active: boolean,
+  intimate: boolean,
+  onClose: () => void,
+) {
+  useEffect(() => {
+    let cancelled = false;
+    if (intimate && !active)
+      queueMicrotask(() => {
+        if (!cancelled) onClose();
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [active, intimate, onClose]);
+  return intimate && !active;
+}
 export function CaptureForm({
   data,
   act,
@@ -381,6 +400,17 @@ export function CaptureForm({
   const [category, setCategory] = useState<Category>("other"),
     [sensitivity, setSensitivity] = useState<Sensitivity>("ordinary");
   const [raw, setRaw] = useState("");
+  const revoked = useIntimateDraftAccess(
+    data.intimacy_active,
+    sensitivity === "explicit-intimate" || category === "intimacy",
+    onDone,
+  );
+  if (revoked)
+    return (
+      <p className="notice" role="status">
+        This intimate draft is closed because participation is off.
+      </p>
+    );
   const duplicate = data.objects.some(
     (o) => o.source_url === raw.trim() && raw.trim().startsWith("http"),
   );
@@ -529,10 +559,12 @@ export function QuestionForm({
     [source, setSource] = useState<"custom" | "curated">(
       initial ? "curated" : "custom",
     );
-  if (
-    (sensitivity === "explicit-intimate" || domain === "intimacy") &&
-    !data.intimacy_active
-  )
+  const revoked = useIntimateDraftAccess(
+    data.intimacy_active,
+    sensitivity === "explicit-intimate" || domain === "intimacy",
+    onDone,
+  );
+  if (revoked)
     return (
       <p className="notice" role="status">
         This private question is unavailable because intimacy participation is

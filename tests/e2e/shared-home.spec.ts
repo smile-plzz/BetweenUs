@@ -139,6 +139,7 @@ test("an empty pair can choose a starter, preserve authorship, and safely explor
 test("two real accounts pair, capture, react, answer voluntarily, decide, and protect discreet context", async ({
   browser,
 }) => {
+  test.setTimeout(90000);
   const contextA = await browser.newContext({
     viewport: { width: 1440, height: 1050 },
   });
@@ -332,6 +333,10 @@ test("two real accounts pair, capture, react, answer voluntarily, decide, and pr
   await a.getByLabel("Intimacy & desire").check();
   await a.getByRole("button", { name: "Save my choices" }).click();
   await expect.poll(async () => (await snapshot(b)).intimacy_active).toBe(true);
+  await expect(
+    b.getByRole("button", { name: "Open an intimacy question privately" }),
+  ).toBeVisible();
+  await expect(b.getByLabel("Your question")).not.toBeVisible();
   const intimate = await mutate(a, {
     action: "question",
     prompt: "A sensitive adult question fixture",
@@ -351,6 +356,39 @@ test("two real accounts pair, capture, react, answer voluntarily, decide, and pr
   await expect(
     b.getByRole("heading", { name: "A sensitive adult question fixture" }),
   ).not.toBeVisible({ timeout: 15000 });
+  await a.getByRole("button", { name: "Privacy and settings" }).click();
+  await a.getByLabel("Intimacy & desire").check();
+  await a.getByRole("button", { name: "Save my choices" }).click();
+  await expect(b.getByRole("button", { name: /intimacy/ })).toBeVisible({
+    timeout: 15000,
+  });
+  await expect(
+    b.getByRole("heading", { name: "A sensitive adult question fixture" }),
+  ).not.toBeVisible();
+  // Restoring permission makes the preview available; opening still needs a fresh click.
+  await b.getByRole("button", { name: /intimacy/ }).click();
+  await expect(
+    b.getByRole("heading", { name: "A sensitive adult question fixture" }),
+  ).toBeVisible();
+  await b.getByRole("button", { name: "Close", exact: true }).click();
+  // A manually written intimate capture is also dismissed, not just suggested questions.
+  await b.getByRole("button", { name: "Save something", exact: true }).click();
+  await b.getByLabel("Discretion").selectOption("explicit-intimate");
+  await b.getByLabel("Link or idea").fill("Synthetic unsaved intimate draft");
+  await a.getByRole("button", { name: "Privacy and settings" }).click();
+  await a.getByLabel("Intimacy & desire").uncheck();
+  await a.getByRole("button", { name: "Save my choices" }).click();
+  await expect(b.getByLabel("Link or idea")).not.toBeVisible({
+    timeout: 15000,
+  });
+  await a.getByRole("button", { name: "Privacy and settings" }).click();
+  await a.getByLabel("Intimacy & desire").check();
+  await a.getByRole("button", { name: "Save my choices" }).click();
+  await expect(b.getByRole("button", { name: /intimacy/ })).toBeVisible({
+    timeout: 15000,
+  });
+  await expect(b.getByLabel("Link or idea")).not.toBeVisible();
+  await expect(b.getByText("Synthetic unsaved intimate draft")).toHaveCount(0);
   await a.getByRole("button", { name: "Our Space", exact: true }).click();
   await a.screenshot({
     path: "test-results/desktop-shared-home.png",
@@ -447,4 +485,135 @@ test("the home stays filled, shares source-backed suggestions, and drafts questi
     path: "test-results/mobile-three-possibilities.png",
     fullPage: true,
   });
+});
+
+test("a connection failure followed by an expired session returns to account entry", async ({
+  page,
+}) => {
+  await signUp(
+    page,
+    "Session pilot",
+    `session-pilot-${Date.now()}@example.test`,
+  );
+  await page.getByLabel("I understand and accept").check();
+  await page
+    .getByRole("button", { name: "Create our space", exact: true })
+    .last()
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "A little of us," }),
+  ).toBeVisible();
+  let expired = false;
+  await page.route("**/api/space", async (route) => {
+    if (route.request().method() !== "GET") return route.continue();
+    await route.fulfill({
+      status: expired ? 401 : 503,
+      contentType: "application/json",
+      body: JSON.stringify({
+        error: expired ? "Please sign in." : "Synthetic connection outage.",
+      }),
+    });
+  });
+  await expect(
+    page.getByRole("button", { name: "Reconnect", exact: true }),
+  ).toBeVisible({ timeout: 15000 });
+  expired = true;
+  await page.getByRole("button", { name: "Reconnect", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Create my account", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("Synthetic connection outage.")).toHaveCount(0);
+  await expect(
+    page.getByRole("region", { name: "Ideas to make your own" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Sign in", exact: true }),
+  ).toBeVisible();
+});
+
+test("a delayed intimate detail cannot reopen after permission withdrawal and restoration", async ({
+  browser,
+}) => {
+  const ca = await browser.newContext(),
+    cb = await browser.newContext();
+  const a = await ca.newPage(),
+    b = await cb.newPage();
+  const run = Date.now();
+  await signUp(a, "Race A", `race-a-${run}@example.test`);
+  await a.getByLabel("I understand and accept").check();
+  await a
+    .getByRole("button", { name: "Create our space", exact: true })
+    .last()
+    .click();
+  await a.getByRole("button", { name: "Invite my partner" }).click();
+  const token = await a.getByLabel("Invitation code").inputValue();
+  await signUp(b, "Race B", `race-b-${run}@example.test`);
+  await b.getByRole("button", { name: "Join my partner", exact: true }).click();
+  await b.getByLabel("Invitation code").fill(token);
+  await b.getByLabel("I understand and accept").check();
+  await b.getByRole("button", { name: "Accept invitation" }).click();
+  await expect(
+    b.getByRole("heading", { name: "A little of us," }),
+  ).toBeVisible();
+  for (const p of [a, b]) {
+    await p.getByRole("button", { name: "Privacy and settings" }).click();
+    await p.getByLabel("Intimacy & desire").check();
+    await p.getByRole("button", { name: "Save my choices" }).click();
+  }
+  const r = await mutate(a, {
+    action: "question",
+    prompt: "Synthetic delayed private question",
+    domain: "intimacy",
+    sensitivity: "explicit-intimate",
+    prompt_source: "custom",
+  });
+  expect(r.ok()).toBe(true);
+  await b.getByRole("button", { name: "Questions", exact: true }).click();
+  let signalReady!: () => void, release!: () => void;
+  const ready = new Promise<void>((resolve) => (signalReady = resolve));
+  const released = new Promise<void>((resolve) => (release = resolve));
+  const pattern = "**/api/detail?**";
+  await b.route(pattern, async (route) => {
+    const response = await route.fetch();
+    expect(response.ok()).toBe(true); // Authorized response existed before withdrawal.
+    signalReady();
+    await released;
+    await route.fulfill({ response });
+  });
+  await b.getByRole("button", { name: /intimacy/ }).click();
+  await ready;
+  await a.getByRole("button", { name: "Privacy and settings" }).click();
+  await a.getByLabel("Intimacy & desire").uncheck();
+  await a.getByRole("button", { name: "Save my choices" }).click();
+  await expect(b.getByRole("button", { name: /intimacy/ })).toHaveCount(0, {
+    timeout: 15000,
+  });
+  await expect(b.getByRole("status")).toHaveCount(0);
+  await a.getByRole("button", { name: "Privacy and settings" }).click();
+  await a.getByLabel("Intimacy & desire").check();
+  await a.getByRole("button", { name: "Save my choices" }).click();
+  await expect(b.getByRole("button", { name: /intimacy/ })).toBeVisible({
+    timeout: 15000,
+  });
+  const finished = b.waitForEvent("requestfinished", {
+    predicate: (request) => request.url().includes("/api/detail?"),
+  });
+  release();
+  await finished;
+  await b.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
+  await expect(
+    b.getByRole("heading", { name: "Synthetic delayed private question" }),
+  ).not.toBeVisible();
+  await b.unroute(pattern);
+  await b.getByRole("button", { name: /intimacy/ }).click();
+  await expect(
+    b.getByRole("heading", { name: "Synthetic delayed private question" }),
+  ).toBeVisible();
+  await ca.close();
+  await cb.close();
 });

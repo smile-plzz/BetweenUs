@@ -68,7 +68,7 @@ The final application revision was fetched/pulled, re-read, and verified locally
 | `npm run lint` | Passed, no errors/warnings |
 | `npm run typecheck` | Passed |
 | `npm test` | **34 passed**, five files; actual PostgreSQL policy/constraint tests plus domain/privacy/ranking/migration checks |
-| `npm run test:e2e` | **3 passed**; isolated server, desktop Partner A, mobile Partner B, unrelated signed-in C in a separate CoupleSpace |
+| `npm run test:e2e` | **5 passed**; isolated server, desktop Partner A, mobile Partner B, unrelated signed-in C in a separate CoupleSpace |
 | `npm run build` | Passed; final build had no compilation/tracing warnings |
 | Production `next start` browser smoke | Passed: signup, space creation, capture, authenticated persisted retrieval, logout |
 | Browser inspection | Auth/home render, no runtime errors or framework overlay, mobile page width fits viewport |
@@ -145,3 +145,12 @@ During the original V1 build, no Supabase project credentials or deployment iden
 ## Product/engineering review
 
 The implemented objects make the shared home useful without a librarian, a chat inbox, or a relationship score. Attribution preserves two people rather than collapsing them into one taste. Question Cards add voluntary expression; sensitive/faith contexts reuse the same architecture with stronger boundaries. The home is finite and decisions can end in leaving the app together. Broader systems were deliberately deferred so the core vertical slice remains runnable and understandable.
+
+## Post-delivery product/engineering review — 2026-10-07
+
+The completed three-possibility home was reviewed against the product principles and controlled-pilot gaps. The next changes address two concrete reliability/privacy defects without adding modules, schema changes, credentials, or another paid integration:
+
+- Intimacy withdrawal previously hid an open surface while retaining its local state, so restoring opt-in could reopen a private draft/detail automatically. A regression browser check reproduced this. Withdrawal now permanently dismisses affected suggested questions, manually written intimate captures/questions and open details. A fresh click is required after participation is restored. Session/member scope changes also dismiss surfaces, and pending detail responses are invalidated so an earlier authorized response cannot reopen private content later. Existing synchronous render guards remain in place while dismissal runs.
+- A temporary connection failure followed by a 401 could retain the offline/error state and prevent the sign-in screen from appearing. A definitive unauthenticated snapshot now clears that stale state alongside shared data; ordinary transient failures still retain the last shared home.
+
+The browser suite now contains five journeys, including restored opt-in, manual intimate draft dismissal, expired-session recovery after an outage, and a deliberately delayed authorized detail response across withdrawal/restoration. Existing database/domain/discovery tests remain at 34. The controlled-pilot limitations and recommended next ten tasks above remain applicable; this review does not resolve self-service recovery/export/deletion or provider email configuration.

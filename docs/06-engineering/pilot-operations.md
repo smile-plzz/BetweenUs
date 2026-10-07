@@ -20,7 +20,7 @@ update private.features set intimacy_pilot = true where singleton;
 update private.features set intimacy_pilot = false where singleton;
 ```
 
-Both active memberships must also opt in. No user can enable another person's preference or the installation flag. Revocation blocks future explicit rows through RLS; the UI clears an open card/item on its next poll (up to four seconds while active) or immediately when the tab hides. Copies previously made by an authorized partner cannot be recalled. Use the ordinary collection without enabling this feature until provider/lifecycle/recovery review is complete.
+Both active memberships must also opt in. No user can enable another person's preference or the installation flag. Revocation blocks future explicit rows through RLS; the UI clears an open card/item on its next poll (up to four seconds while active) or immediately when the tab hides. Withdrawal permanently dismisses an affected open detail, suggested question draft, or manually written intimate capture/question draft; restoring opt-in makes the preview available but requires a fresh explicit opening action. Detail responses that were pending across a membership/session or intimacy revocation are invalidated. Copies previously made by an authorized partner cannot be recalled. Use the ordinary collection without enabling this feature until provider/lifecycle/recovery review is complete.
 
 ## Closing, deletion, and export
 

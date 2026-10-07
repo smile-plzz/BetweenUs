@@ -75,6 +75,11 @@ export function BetweenUs() {
     QuestionDraft | undefined
   >();
   const detailRequest = useRef(0);
+  const accessScope = useRef<{
+    userId: string | null;
+    spaceId: string | null;
+    intimacy: boolean;
+  } | null>(null);
   const dismiss = useCallback(() => {
     detailRequest.current++;
     setDetail(null);
@@ -98,6 +103,39 @@ export function BetweenUs() {
       document.removeEventListener("visibilitychange", hide);
     };
   }, [dismiss]);
+  useEffect(() => {
+    if (!loaded) return;
+    const next = {
+      userId: data?.user.id ?? null,
+      spaceId: data?.space?.id ?? null,
+      intimacy: data?.intimacy_active ?? false,
+    };
+    const previous = accessScope.current;
+    accessScope.current = next;
+    const scopeChanged =
+      previous &&
+      (previous.userId !== next.userId || previous.spaceId !== next.spaceId);
+    const intimacyRevoked = previous?.intimacy && !next.intimacy;
+    const privateSurfaceRevoked =
+      !next.intimacy &&
+      (detail?.item.sensitivity === "explicit-intimate" ||
+        questionDraft?.domain === "intimacy");
+    // A server permission change permanently dismisses affected surfaces; render
+    // guards already hide them. Invalidate pending detail responses before cleanup.
+    if (scopeChanged || intimacyRevoked || privateSurfaceRevoked)
+      detailRequest.current++;
+    if (scopeChanged || privateSurfaceRevoked || (intimacyRevoked && opening))
+      queueMicrotask(dismiss);
+  }, [
+    loaded,
+    data?.user.id,
+    data?.space?.id,
+    data?.intimacy_active,
+    detail?.item.sensitivity,
+    questionDraft?.domain,
+    opening,
+    dismiss,
+  ]);
   async function open(type: "object" | "question", id: string) {
     const epoch = ++detailRequest.current;
     setOpening(true);

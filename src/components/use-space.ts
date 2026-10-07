@@ -19,6 +19,8 @@ export function useSpace() {
         if (request === epoch.current) {
           setData(null);
           signedIn.current = false;
+          setOffline(false);
+          setError("");
         }
         return;
       }
